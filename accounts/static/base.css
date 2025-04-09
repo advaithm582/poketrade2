@@ -1,0 +1,111 @@
+/* No nonsense style sheet */
+
+body {
+    background-color: #99cc99;
+    font-family: sans-serif;
+}
+
+ul.menu {
+    background-color: #000066;
+    color: #ffffff;
+    font-weight: bold;
+    list-style: none;
+    padding: 0px 0px 0px 0px;
+}
+
+ul.menu > li {
+    display: inline;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+ul.menu > li.align-right {
+    float: right;
+}
+
+ul.menu > li:hover {
+    background-color: #ff9900;
+}
+
+ul.menu button {
+    align-items: normal;
+    background-color: inherit;
+    border-color: inherit;
+    border-style: none;
+    box-sizing: content-box;
+    color: inherit;
+    cursor: pointer;
+    display: inline;
+    font: inherit;
+    height: auto;
+    padding: 0;
+    perspective-origin: 0 0;
+    text-align: start;
+    transform-origin: 0 0;
+    width: auto;
+}
+
+ul.menu a {
+    text-decoration: none;
+    color: #ffffff !important;
+}
+
+.footer {
+    margin-top: 10px;
+    border-top: 1px solid #515151;
+    font-style: italic;
+}
+
+.footer > p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.pagetitle {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-bottom: 1px solid #515151;
+}
+
+.pagetitle > h2 {
+    margin-top: 0px;
+    margin-bottom: 2px;
+}
+
+.message {
+    border: 1px solid #000000;
+    font-weight: bold;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.message > p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.message > ul {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-left: 20px;
+}
+
+.message.msg-danger {
+    background-color: #ff0000;
+    color: #ffffff;
+}
+
+.message.msg-warning {
+    background-color: #ffff00;
+    color: #000000;
+}
+
+.message.msg-success {
+    background-color: #00ff00;
+    color: #000000;
+}
+
+.message.msg-info {
+    background-color: #0000ff;
+    color: #ffffff;
+}

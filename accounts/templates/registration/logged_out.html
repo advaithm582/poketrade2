@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Logged Out" %}{% endblock %}
+
+{% block content %}
+
+<div class="message msg-info">
+    <p>{% translate "Log Out Successful" %}</p>
+    <br>
+    <p>{% translate "For your safety, close all browser windows." %}</p>
+</div>
+
+{% endblock %}
+
