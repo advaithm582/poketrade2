@@ -1,0 +1,15 @@
+# New gitignore
+.idea/
+.vs/
+# Most goated text editor
+*.swp
+
+venv/
+.venv/
+*.sqlite3
+*.db
+media/
+
+__pycache__/
+*.pyc
+
