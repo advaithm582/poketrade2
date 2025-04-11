@@ -39,6 +39,8 @@ AUTH_USER_MODEL = "accounts.User"
 INSTALLED_APPS = [
     # add Accounts app (configuration class)
     "accounts.apps.AccountsConfig",
+    # add Trading app (singular app for pokemon related stuff)
+    "trading.apps.TradingConfig",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
