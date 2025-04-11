@@ -8,7 +8,9 @@ __author__ = "Advaith Menon"
 
 import hashlib
 from urllib.parse import parse_qs
+from io import StringIO
 
+from django.core.management import call_command
 from django.test import TestCase
 
 from .models import User
@@ -54,4 +56,38 @@ class GravatarTestCase(TestCase):
         self.assertEqual({
             "d": ["wavatar"], "s": ["40"], "name": ["Web Master"]},
             param);
+
+
+class UpdateInterestTest(TestCase):
+    """Tests if the Update Interest command works as intended.
+    """
+    def setUp(self):
+        self.p47 = User.objects.create(username="realDonaldTrump",
+                            coins=120000)
+        self.p46 = User.objects.create(username="JoeRogan",
+                            coins=0)
+
+    def refresh_props(self):
+        """Refresh objects from database
+        """
+        self.p47.refresh_from_db()
+        self.p46.refresh_from_db()
+
+    def test_interest_zero(self):
+        """Tests if an interest of zero percent retains the account
+        balance.
+        """
+        call_command("update_interest", 0)
+        self.refresh_props()
+        self.assertEqual(120000, self.p47.coins)
+        self.assertEqual(0, self.p46.coins)
+
+    def test_interest_half(self):
+        """Tests if an interest of 50 percent increases the account
+        balance.
+        """
+        call_command("update_interest", 0.5)
+        self.refresh_props()
+        self.assertEqual(120000 * 1.5, self.p47.coins)
+        self.assertEqual(0, self.p46.coins)
 
