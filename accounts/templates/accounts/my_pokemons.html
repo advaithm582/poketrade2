@@ -7,9 +7,19 @@
 
 {% if not pokemons %}
 <div class="message msg-info">
+    {% if query_str %}
+    You have no such Pokemon.
+    {% else %}
     You have no Pokemons. Go and trade!
+    {% endif %}
 </div>
 {% endif %}
+
+<form method="GET">
+    <input type="text" name="s" placeholder="Search..."
+        value="{{ query_str }}">
+    <input type="submit" value="Search">
+</form>
 
 <table>
     <tr>

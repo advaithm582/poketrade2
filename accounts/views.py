@@ -26,7 +26,18 @@ class MyPokemonsListView(LoginRequiredMixin, ListView):
     model = Pokemon
     context_object_name = "pokemons"
 
+    def get_context_data(self, **kwargs):
+        # to modify message on search
+        ctx = super().get_context_data(**kwargs)
+        ctx["query_str"] = self.request.GET.get("s", "")
+        return ctx
+
+
     def get_queryset(self):
+        if "s" in self.request.GET:
+            # we have a search term
+            term = self.request.GET["s"]
+            return self.request.user.pokemons.filter(name__contains=term)
         return self.request.user.pokemons.all()
 
 
