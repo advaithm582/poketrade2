@@ -1,5 +1,6 @@
 asgiref==3.8.1
 dacite==1.9.2
 Django==5.2
+pillow==11.1.0
 pokemontcgsdk==3.4.0
 sqlparse==0.5.3
