@@ -1,0 +1,5 @@
+asgiref==3.8.1
+dacite==1.9.2
+Django==5.2
+pokemontcgsdk==3.4.0
+sqlparse==0.5.3
