@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}My Pokemons{% endblock %}
+
+{% block content %}
+<h1>My Pokemons</h1>
+<hr>
+
+{% if not pokemons %}
+<div class="message msg-info">
+    You have no Pokemons. Go and trade!
+</div>
+{% endif %}
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>HP</th>
+        <th>Type</th>
+        <th>Worth</th>
+        <th>More Info</th>
+    </tr>
+    {% for pokemon in pokemons %}
+    <tr>
+        <td>{{ pokemon.name }}</td>
+        <td>{{ pokemon.hp }}</td>
+        <td>{{ pokemon.type_l }}</td>
+        <td>{{ pokemon.cost_price }}</td>
+        <td><a href="#">more...</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+

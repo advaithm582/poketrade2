@@ -160,6 +160,9 @@ class Pokemon(models.Model):
     # real sell price
     sell_price = models.FloatField(default=0);
 
+    # cost price
+    cost_price = models.FloatField(default=0);
+
     # owner of Pokemon
     # The pokemon subreddit says that Pokemon is Pocket Monsters
     # So pokemons is the plural of Pokemon

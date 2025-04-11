@@ -19,5 +19,7 @@ urlpatterns = [
         path("profile/<int:pk>/edit", v.ProfileUpdateView.as_view(),
              name="edit_profile"),
         path("profile/", v.my_profile, name="my_profile"),
+        path("profile/pokemon", v.MyPokemonsListView.as_view(),
+             name="my_pokemon"),
         ]
 

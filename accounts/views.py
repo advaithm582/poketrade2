@@ -3,17 +3,31 @@
 Contains signup pages and the profile page.
 """
 
-__all__ = ["ProfileView", "ProfileUpdateView", "my_profile"]
+__all__ = ["ProfileView", "ProfileUpdateView", "MyPokemonsListView",
+           "my_profile"]
 
 __author__ = "Advaith Menon"
 
 from django.views.generic.detail import DetailView
+from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, reverse
 from django.views.generic.edit import UpdateView
 
 from .models import User
+from trading.models import Pokemon
+
+
+class MyPokemonsListView(LoginRequiredMixin, ListView):
+    """Lists a users' owned Pokemon.
+    """
+    template_name = "accounts/my_pokemons.html"
+    model = Pokemon
+    context_object_name = "pokemons"
+
+    def get_queryset(self):
+        return self.request.user.pokemons.all()
 
 
 class ProfileView(LoginRequiredMixin, DetailView):
