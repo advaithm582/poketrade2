@@ -79,3 +79,12 @@ class User(AbstractUser):
         param = urlencode(param);
         return "https://www.gravatar.com/avatar/{}?{}".format(hash, param)
 
+    @property
+    def gravatar_64(self):
+        """Gravatar as a property for Django Templates.
+
+        :return: A Gravatar URL of size 64 
+        :rtype: str
+        """
+        return self.gravatar(64);
+

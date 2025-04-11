@@ -109,3 +109,9 @@ ul.menu a {
     background-color: #0000ff;
     color: #ffffff;
 }
+
+.code {
+    font-family: monospace;
+    color: red;
+    background-color: white;
+}
