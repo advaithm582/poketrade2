@@ -8,6 +8,7 @@ __all__ = ["PokemonListView"]
 __author__ = "Advaith Menon"
 
 from django.views.generic import ListView
+from django.views.generic.detail import DetailView
 
 from .models import Pokemon
 
@@ -34,3 +35,10 @@ class PokemonListView(ListView):
             term = self.request.GET["s"]
             return Pokemon.objects.filter(name__contains=term)
         return Pokemon.objects.all()
+
+
+class PokemonDetailView(DetailView):
+    # template: trading/pokemon_detail.html
+    model = Pokemon
+    context_object_name = "the_pokemon"
+

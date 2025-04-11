@@ -13,8 +13,8 @@
         <h1>PokeTrade</h1>
         <ul class="menu">
             {% if user.is_authenticated %}
-            <li><a href="/">Home</a></li>
-            <li>Profile</li>
+            <li><a href="/pokemon/all">Sales</a></li>
+            <li><a href="{% url "accounts:my_profile" %}">Profile</a></li>
             <li class="align-right">
                 <form method="post" action="{% url 'accounts:logout' %}">
                     {% csrf_token %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}{{ the_pokemon.name }} - Stats{% endblock %}
+
+{% block content %}
+<h1>{{ the_pokemon.name }}</h1>
+<hr>
+
+<table>
+    <tr>
+        <td>
+            Image:
+        </td>
+        <td>
+            <img src="{{ the_pokemon.image }}" alt="pokemon card">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Name:
+        </td>
+        <td>
+            {{ the_pokemon.name }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Supertype:
+        </td>
+        <td>
+            {% if the_pokemon.supertype %}
+            {{ the_pokemon.supertype }}
+            {% else %}
+            <em>n/a</em>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Subtype:
+        </td>
+        <td>
+            {% if the_pokemon.subtypes %}
+            <ul>
+            {% for st in the_pokemon.subtypes %}
+            <li>{{ st }}</li>
+            {% endfor %}
+            </ul>
+            {% else %}
+            <em>n/a</em>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Health Points:
+        </td>
+        <td>
+            {% if the_pokemon.hp >= 0  %}
+            {{ the_pokemon.hp }}
+            {% else %}
+            <em>unknown</em>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Types:
+        </td>
+        <td>
+            {% if the_pokemon.types %}
+            <ul>
+            {% for st in the_pokemon.types %}
+            <li>{{ st }}</li>
+            {% endfor %}
+            </ul>
+            {% else %}
+            <em>n/a</em>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Description:
+        </td>
+        <td>
+            {% if the_pokemon.description %}
+            {{ the_pokemon.description }}
+            {% else %}
+            <em>n/a</em>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Evolves from:
+        </td>
+        <td>
+            {% if the_pokemon.evolves_from %}
+            <a href="{% url "trading:single_detail" the_pokemon.evolves_from.pk %}">
+                {{ the_pokemon.evolves_from.name }}
+            </a>
+            {% else %}
+            <em>nothing</em>
+            {% endif %}
+        </td>
+    </tr>
+</table>
+{% endblock %}
+

@@ -82,7 +82,7 @@ class Pokemon(models.Model):
     # bacteria pop out of nowhere.
     # evolvesFrom = models.CharField(max_length=127, null=True,
     # blank=True)
-    evolvesFrom = models.ForeignKey("self", on_delete=models.CASCADE,
+    evolves_from = models.ForeignKey("self", on_delete=models.CASCADE,
                                     null=True, blank=True);
     # Sometimes, Pokemon just evolve to nothing. Just as how after
     # robots take over the world, there will be nothing left. Just
