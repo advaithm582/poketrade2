@@ -169,6 +169,9 @@ class Pokemon(models.Model):
                               null=True, blank=True,
                               related_name="pokemons")
 
+    def __str__(self):
+        return self.name
+
     @property
     def weaknesses(self):
         """A Pythonic Getter for weaknesses.
