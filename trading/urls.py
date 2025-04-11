@@ -14,5 +14,6 @@ app_name = "trading"
 
 # Describes the URLs in this namespace.
 urlpatterns = [
+        path("pokemon/all", v.PokemonListView.as_view(), name="pokemon"),
         ]
 

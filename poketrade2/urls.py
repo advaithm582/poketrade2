@@ -25,4 +25,6 @@ urlpatterns = [
     # URL for the Accounts app
     path("accounts/", include("accounts.urls")),
     path('admin/', admin.site.urls),
+    # Trading gets root priority
+    path("", include("trading.urls")),
 ]
