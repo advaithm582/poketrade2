@@ -37,9 +37,9 @@
         <td>{{ pokemon.type_l }}</td>
         <td>{{ pokemon.rarity }}</td>
         <td>
-            {% if pokemon.sell_price %}
+            {% if pokemon.trading_policy == 1 %}
                 Selling for {{ pokemon.sell_price }}
-            {% elif pokemon.owner %}
+            {% elif pokemon.trading_policy == 2 %}
                 Claimed
             {% else %}
                 Reserved for new users

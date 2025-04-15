@@ -4,12 +4,29 @@ Since PokeTrade2 is already used as the application management folder,
 we have to use a separate folder. "Trading" sounded the best.
 """
 
-__all__ = ["Pokemon", "Ability", "Attack"]
+__all__ = ["TradingPolicy", "Pokemon", "Ability", "Attack"]
 __author__ = "Advaith Menon"
 
 from django.db import models
 
 from accounts.models import User
+
+
+class TradingPolicy(object):
+    """Represents the trading policy of a pokemon.
+
+    A pokemon can be FOR_SALE, and any user could buy it for its
+    ``Pokemon.sell_price``. However, if it is not for sale (i.e.
+    it has an owner, it is CLAIMED. If a Pokemon does not have a
+    nonzero sell price and no owner, it'll be
+    RESERVED_FOR_NEW_USERS.
+
+    This class is intentionally not an enum, to simplify templating.
+    """
+    # do not change these values!
+    FOR_SALE = 1
+    CLAIMED = 2
+    RESERVED_FOR_NEW_USERS = 3
 
 
 class Pokemon(models.Model):
@@ -292,6 +309,24 @@ class Pokemon(models.Model):
         :type types: list
         """
         self.type_l = ",".join(types);
+
+
+    @property
+    def trading_policy(self):
+        """Get the trading policy of this user.
+
+        :return: The trading policy of the user, as defined by the
+            corresponding Enum.
+        :rtype: class`TradingPolicy`
+        """
+        if self.sell_price > 0:
+            # if it has no user the money goes into the blackhole
+            # you will probably see Cooper out there w/ the bookshelves
+            return TradingPolicy.FOR_SALE
+        elif self.owner is not None:
+            return TradingPolicy.CLAIMED
+        else:
+            return TradingPolicy.RESERVED_FOR_NEW_USERS
 
     @classmethod
     def get_random_pokemon(self):

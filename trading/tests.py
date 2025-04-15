@@ -4,13 +4,51 @@ Test cases for the store models. Mainly tests abstratctions on
 text-encoded fields.
 """
 
-__all__ = ["StringEncodingTestCase"]
+__all__ = ["TradingPolicyGetterTest", "StringEncodingTestCase"]
 __author__ = "Advaith Menon"
 
 from django.test import TestCase
 from django.urls import reverse
 
 from .models import Pokemon
+from accounts.models import User
+
+
+class TradingPolicyGetterTest(TestCase):
+    """Test if the Trading Policy Getters work properly, and
+    if their constant values (1, 2, 3) are fixed.
+    """
+
+    TP_FOR_SALE = 1
+    TP_CLAIMED = 2
+    TP_RESERVED = 3
+
+    def setUp(self):
+        """Set up the tests with dummy Pokemon.
+
+        Here, Pokemon unique by trading policy are created.
+        """
+        self.usr = User(username="gpburdell",
+                        first_name="George",
+                        last_name="Burdell",
+                        email="gpburdell@gatech.edu")
+        # for sale
+        self.p1 = Pokemon(name="crocodile",
+                          sell_price=25565,
+                          owner=self.usr);
+        # claimed
+        self.p2 = Pokemon(name="cat",
+                          sell_price=0,
+                          owner=self.usr);
+        # reserved
+        self.p3 = Pokemon(name="dog",
+                          sell_price=0);
+
+    def test_hardcoded(self):
+        """Test if the trading policies are hard set correctly"""
+        self.assertEqual(self.TP_FOR_SALE, self.p1.trading_policy);
+        self.assertEqual(self.TP_CLAIMED, self.p2.trading_policy);
+        self.assertEqual(self.TP_RESERVED, self.p3.trading_policy);
 
 
 class StringEncodingTestCase(TestCase):
