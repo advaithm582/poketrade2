@@ -4,14 +4,80 @@ Test cases for the store models. Mainly tests abstratctions on
 text-encoded fields.
 """
 
-__all__ = ["TradingPolicyGetterTest", "StringEncodingTestCase"]
+__all__ = ["QueryParserTest",
+           "TradingPolicyGetterTest", "StringEncodingTestCase"]
 __author__ = "Advaith Menon"
 
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Pokemon
 from accounts.models import User
+from .models import Pokemon
+from .helpers import QueryParser
+
+
+class _Q(object):
+    """A dummy Q object"""
+    def __init__(self, *a, **kw):
+        self.str = str(kw) if kw else a[0]
+
+    def __and__(self, other):
+        return _Q(self.str + "A" + other.str)
+
+    def __or__(self, other):
+        return _Q(self.str + "O" + other.str)
+
+    def __invert__(self):
+        return _Q("N" + self.str)
+
+
+class QueryParserTest(TestCase):
+    """Test the working of the Query Parser.
+    """
+    def test_untangle(self):
+        """Test escaping acc to RFC 3986"""
+        self.assertEqual("pushing,limits;",
+                         QueryParser.untangle("pushing%2Climits%3B"));
+        # lower case
+        self.assertEqual("pushing,limits;",
+                         QueryParser.untangle("pushing%2climits%3b"));
+
+    def test_parse_small_raw(self):
+        """Test parsing raw fields"""
+        qp = QueryParser(valid_fields={"name": str, "year": int})
+        self.assertEqual(("name__exact", "Khrushchev, Nikita"),
+                         qp.parse_small_raw(
+                             "name,IDENT,Khrushchev%2C Nikita"))
+        self.assertEqual(("year__lte", 1991),
+                         qp.parse_small_raw("year,LTE,1991"))
+
+        with self.assertRaises(ValueError) as e:
+            # sorry math fans!
+            qp.parse_small_raw("year,CONTAINS,(1991%2c2004)");
+        self.assertEqual("Unsupported operation for field",
+                         str(e.exception))
+
+        with self.assertRaises(ValueError) as e:
+            qp.parse_small_raw("american_counterpart,EXACT,Ronald Reagan");
+        self.assertEqual("No such field: american_counterpart",
+                         str(e.exception))
+
+        with self.assertRaises(ValueError) as e:
+            qp.parse_small_raw("name,is_KGB_AGENT,true");
+        self.assertEqual("No such operator: IS_KGB_AGENT",
+                         str(e.exception))
+
+    def test_parse(self):
+        qp = QueryParser(valid_fields={"name": str, "year": int,
+                                       "potus": str})
+        rv = qp.parse(
+                "name,CONTAINS,ail;year,LTE,1991;@OR;potus,IDENT,"
+                "Ronald Reagan;@NOT",
+                qcb=_Q);
+        self.assertEqual(
+                "N{'potus__exact': 'Ronald Reagan'}A{'year__lte': "
+                "1991}O{'name__contains': 'ail'}",
+                rv.str)
 
 
 class TradingPolicyGetterTest(TestCase):
