@@ -85,6 +85,9 @@ class Pokemon(models.Model):
     
     # ~machine~end~{e77bdfa3-a871-445c-b412-d7914751c6b7}
 
+    # ID in the TCG database
+    tcg_id = models.CharField(max_length=256, null=True, blank=True,
+                              default=None, unique=True)
     name = models.CharField(max_length=256)
     supertype = models.CharField(max_length=256, null=True)
     # NOTE: use the property ".subtypes", it is a list which will
@@ -94,13 +97,16 @@ class Pokemon(models.Model):
     # NOTE: use the property ".types", it is a list which will
     # do the serialization for you.
     type_l = models.TextField(default="");
-    description = models.TextField(default="")
+    # TODO: this field does not actually exist - remove it
+    # description = models.TextField(default="")
     # Some pokemon don't evolve from anything. Just like how some random
     # bacteria pop out of nowhere.
     # evolvesFrom = models.CharField(max_length=127, null=True,
     # blank=True)
-    evolves_from = models.ForeignKey("self", on_delete=models.CASCADE,
-                                    null=True, blank=True);
+    # evolves_from = models.ForeignKey("self", on_delete=models.CASCADE,
+    #                                 null=True, blank=True);
+    evolves_from = models.CharField(max_length=256, null=True, blank=True,
+                                    default=None)
     # Sometimes, Pokemon just evolve to nothing. Just as how after
     # robots take over the world, there will be nothing left. Just
     # better robots.

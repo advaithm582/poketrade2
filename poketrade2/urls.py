@@ -20,6 +20,7 @@ __author__ = "Advaith Menon et al."
 
 from django.contrib import admin
 from django.urls import include, path
+from django.conf import settings
 
 urlpatterns = [
     # URL for the Accounts app
@@ -28,3 +29,11 @@ urlpatterns = [
     # Trading gets root priority
     path("", include("trading.urls")),
 ]
+
+
+# configure media uploads
+if settings.DEBUG:
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
+
