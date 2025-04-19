@@ -3,12 +3,14 @@
 Contains helpers to parse advanced queries
 """
 
-__all__ = ["QueryParser"]
+__all__ = ["QueryParser", "assign_pokemon_to_user"]
 __author__ = "Advaith Menon"
 
 import re
 
 from django.db.models import Q
+
+from .models import Pokemon
 
 
 # Defines an escape sequence according to RFC 3986
@@ -143,3 +145,20 @@ class QueryParser(object):
 
         # return that 1 element
         return stack.pop()
+
+
+def assign_pokemon_to_user(user):
+    """Randomly assign Pokemon to user. Update their account balance.
+
+    :param user: The user to assign Pokemon to.
+    :type user: class`accounts.User`
+    """
+    # TODO
+    for o in Pokemon.objects.filter(owner__isnull=True, sell_price__lte=0)\
+            .order_by("?")[:10]:
+        o.owner = user
+        user.coins += o.sell_price \
+                or o.suggested_price or o.average_sell_price \
+                or o.low_price or o.trend_price
+        o.save()
+        user.save()
