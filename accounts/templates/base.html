@@ -1,46 +1,60 @@
-{% load i18n %}
 {% load static %}
+{% load i18n %}
 
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8" >
-        <title>{% block title %}{{template_data.title}}{% endblock %}</title>
-        <link rel="stylesheet" href="{% static 'base.css' %}">
-    </head>
-    <body>
-        {% block navbar %}
-        <h1>PokeTrade</h1>
-        <ul class="menu">
-            {% if user.is_authenticated %}
-            <li><a href="/pokemon/all">Sales</a></li>
-            <li><a href="{% url "accounts:my_profile" %}">Profile</a></li>
-            <li class="align-right">
-                <form method="post" action="{% url 'accounts:logout' %}">
-                    {% csrf_token %}
-                    <button type="submit">Logout</button>
-                </form>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static '/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>{% block title %}PokeTrade{% endblock %}</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-transparent">
+      <img class="navbar_image" src="{% static '/refimages/title.png' %}">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <span class="coin_display"><img class="coins" src="{% static '/refimages/coin.png' %}"></span>
+        <ul class="navbar-nav">
+          {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link box" href="">Trading</a></li>
+            <li class="nav-item"><a class="nav-link box" href="">Market</a></li>
+            <li class="nav-item"><a class="nav-link box" href="">Collection</a></li>
+            <li class="nav-item"><a class="nav-link box" href="">Wishlist</a></li>
+            <li class="nav-item">
+              <a class="nav-link box" href="{% url 'accounts:my_profile' %}">
+                <img class="profile_BTN" src="{% static '/refimages/profile.png' %}">
+              </a>
             </li>
-            {% comment %}
-            <li class="align-right">
-                <a href="{% url 'accounts.logout' %}">Logout</a>
+            <li class="nav-item">
+              <form method="post" action="{% url 'accounts:logout' %}" class="nav-link box">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link p-0 m-0 align-baseline">Logout</button>
+              </form>
             </li>
-            {% endcomment %}
-            <li class="align-right">{{ user.username }}</li>
-            {% else %}
-            <li><a href="{% url 'accounts:login' %}">Login</a></li>
-            {# <li><a href="{% url 'accounts:signup' %}">Register</a></li> #}
-            {% endif %}
+          {% else %}
+            <li class="nav-item"><a class="nav-link box" href="{% url 'accounts:login' %}">Login</a></li>
+          {% endif %}
         </ul>
-        {% endblock %}
+      </div>
+    </nav>
 
-        {% block content %}
-        {% endblock %}
+    <img src="{% static '/refimages/title.png' %}" class="title_image">
 
-        <div class="footer">
-            <ul>
-                <li><a href="/">Main Site</a></li>
-            </ul>
-        </div>
-    </body>
+    <div class="container">
+      {% block content %}
+      <div id="image-row"></div>
+      {% endblock %}
+    </div>
+
+    <script src="{% static '/script.js' %}"></script>
+  </body>
 </html>

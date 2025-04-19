@@ -16,6 +16,7 @@ from pokemontcgsdk import Card
 from PIL import Image
 
 from trading.models import Pokemon
+import sys
 
 
 # Offset values for cropping - don't change
