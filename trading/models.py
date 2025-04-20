@@ -173,6 +173,8 @@ class Pokemon(models.Model):
     flavorText = models.TextField(default="");
 
     image = models.ImageField(upload_to='pokemon_images/')
+    card = models.ImageField(upload_to='pokemon_card/', null=True,
+                             blank=True)
 
     # NOTE: 0 is a null value for this
     average_sell_price = models.FloatField(default=0);

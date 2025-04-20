@@ -3,12 +3,13 @@
 Contains helpers to parse advanced queries
 """
 
-__all__ = ["QueryParser", "assign_pokemon_to_user"]
+__all__ = ["QueryParser", "assign_pokemon_to_user", "QueryableMixin"]
 __author__ = "Advaith Menon"
 
 import re
 
 from django.db.models import Q
+from django.views.generic import ListView
 
 from .models import Pokemon
 
@@ -147,6 +148,40 @@ class QueryParser(object):
         return stack.pop()
 
 
+class QueryableMixin(object):
+    """A mixin that supports user queries.
+    """
+    def _get_userquery(self):
+        """Get the user's query (simple or advanced)
+        """
+        if "q" in self.request.GET:
+            return self.request.GET["q"]
+        elif "s" in self.request.GET:
+            return "name,CONTAINS,%s" % (
+                    self.request.GET["s"].replace(",", "%2C") \
+                            .replace(";", "%3B") \
+                            .replace(":", "%3A") \
+                            .replace("@", "%40"))
+        else:
+            return None
+
+    def _get_pu(self):
+        """Get Parsed User Query"""
+        return self.generic_qparse.parse(self._get_userquery())
+
+    def get_context_data(self, **kwargs):
+        # to modify message on search
+        ctx = super().get_context_data(**kwargs)
+        ctx["query_str"] = self._get_userquery() or "";
+        return ctx
+
+    def get_queryset(self):
+        if self._get_userquery() is not None:
+            # we have a search term
+            return self.model.objects.filter(self._get_pu())
+        return self.model.objects.all()
+
+
 def assign_pokemon_to_user(user):
     """Randomly assign Pokemon to user. Update their account balance.
 
@@ -162,3 +197,4 @@ def assign_pokemon_to_user(user):
                 or o.low_price or o.trend_price
         o.save()
         user.save()
+

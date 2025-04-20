@@ -61,6 +61,10 @@ class Command(BaseCommand):
         pre_crop.flush()
         pre_crop.seek(0)
 
+        # save image before cropping
+        poke.card.save(os.path.split(url)[1], File(pre_crop), save=False)
+        pre_crop.seek(0)
+
         # read image with pillow
         pre_im = Image.open(pre_crop)
 
@@ -83,25 +87,35 @@ class Command(BaseCommand):
         pk = Pokemon()
         pk.tcg_id = poke.id
         pk.name = poke.name
-        pk.supertype = poke.supertype
-        pk.subtypes = poke.subtypes
-        try:
-            pk.hp = int(poke.hp)
-        except ValueError:
-            sys.stderr.write("    * Cannot add HP for this Pokemon")
-            sys.stderr.write("      {} is not an integer".format(poke.hp))
-        pk.types = poke.types
-        pk.evolves_from = poke.evolvesFrom
+        if pk.supertype:
+            pk.supertype = poke.supertype
+        if pk.subtypes:
+            pk.subtypes = poke.subtypes
+        if poke.hp:
+            try:
+                pk.hp = int(poke.hp)
+            except ValueError:
+                sys.stderr.write("    * Cannot add HP for this Pokemon")
+                sys.stderr.write("      {} is not an integer".format(poke.hp))
+
+        if poke.types:
+            pk.types = poke.types
+        if poke.evolvesFrom:
+            pk.evolves_from = poke.evolvesFrom
         if poke.weaknesses:
             pk.weaknesses = {j.type: j.value for j in poke.weaknesses}
         if poke.resistances:
             pk.resistances = {j.type: j.value for j in poke.resistances}
         if poke.retreatCost:
             pk.retreat_cost = poke.retreatCost
-        pk.number = poke.number or ""
-        pk.artist = poke.artist or ""
-        pk.flavorText = poke.flavorText or ""
-        pk.national_pokedex_numbers = poke.nationalPokedexNumbers
+        if poke.number:
+            pk.number = poke.number or ""
+        if poke.artist:
+            pk.artist = poke.artist or ""
+        if poke.flavorText:
+            pk.flavorText = poke.flavorText or ""
+        if poke.nationalPokedexNumbers:
+            pk.national_pokedex_numbers = poke.nationalPokedexNumbers
         # TODO: add rarity
         if poke.cardmarket and poke.cardmarket.prices:
             pk.average_sell_price = poke.cardmarket.prices.averageSellPrice
