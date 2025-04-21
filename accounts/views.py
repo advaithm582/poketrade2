@@ -52,7 +52,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     fields = ["username", "first_name", "last_name", "email"]
-    # accounts/user_update.html
+    # accounts/user_update.html.bak
     template_name_suffix = "_update"
 
     def get_object(self, *args, **kw):

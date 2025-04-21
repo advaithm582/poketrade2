@@ -348,7 +348,7 @@ class Pokemon(models.Model):
         ...
 
     def __repr__(self):
-        return "<Pokemon id=%s, name=%s>" % (id, name);
+        return "<Pokemon id=%s, name=%s>" % (id, name)
 
 
 class Ability(models.Model):
