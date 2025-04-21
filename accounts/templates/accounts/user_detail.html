@@ -49,7 +49,9 @@
             Coins:
         </td>
         <td>
-            {{ the_user.coins }}
+            {{ the_user.coins }}&nbsp;|&nbsp;
+            <a href="{% url "trading:user_collection" the_user.pk %}"
+               >collection</a>
         </td>
     </tr>
     <tr>

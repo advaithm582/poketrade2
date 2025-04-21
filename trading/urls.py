@@ -14,8 +14,10 @@ app_name = "trading"
 
 # Describes the URLs in this namespace.
 urlpatterns = [
-        path("pokemon/all", v.PokemonListView.as_view(), name="list"),
+        path("", v.PokemonListView.as_view(), name="list"),
         path("pokemon/<int:pk>/", v.PokemonDetailView.as_view(),
              name="single_detail"),
+        path("accounts/profile/<int:pk>/collection",
+             v.UserPokemonListView.as_view(), name="user_collection"),
         ]
 

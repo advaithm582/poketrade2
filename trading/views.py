@@ -22,7 +22,7 @@ class PokemonListView(QueryableMixin, ListView):
     # the default ^^ is okay
     model = Pokemon
     context_object_name = "pokemons"
-    paginate_by = 50
+    paginate_by = 100
 
     # defines the custom query
     generic_qparse = QueryParser(valid_fields={"name": str, "hp": int,
@@ -34,6 +34,13 @@ class UserPokemonListView(QueryableMixin, ListView):
     """Lists a single users' Pokemon.
     """
     model = Pokemon
+    context_object_name = "pokemons"
+    paginate_by = 100
+
+    def get_queryset(self):
+        # print("kwe:", type(self.kwargs.get("pk")))
+        return super().get_queryset() \
+                .filter(owner__pk__exact=self.kwargs.get("pk"))
 
 
 class PokemonDetailView(DetailView):
