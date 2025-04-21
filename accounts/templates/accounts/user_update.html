@@ -3,21 +3,40 @@
 {% block title %}Edit Profile{% endblock %}
 
 {% block content %}
-
-<div class="d-flex justify-content-center">
-            <div class="row">
-                <div class="col-sm">
-                    <img class="profpic" src="{{ the_user.gravatar_64 }}" alt="">
-                </div>
-                <div class="col-sm-9">
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <input type="submit" value="Update">
-                    </form>
-                </div>
+<div class="container-fluid">
+    <div class="d-flex justify-content-center">
+        <div class="p-2 profhead">Edit Profile</div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="p-2 entries">
+                {{ form.username.errors }}
+                <label for="{{ form.username.id_for_label }}">Username: </label>
+                {{ form.username }}
             </div>
-        </div>
+            <div class="p-2 entries">
+                {{ form.first_name.errors }}
+                <label for="{{ form.first_name.id_for_label }}">First Name: </label>
+                {{ form.first_name }}
+            </div>
+            <div class="p-2 entries">
+                {{ form.last_name.errors }}
+                <label for="{{ form.last_name.id_for_label }}">Last Name: </label>
+                {{ form.last_name }}
+            </div>
+            <div class="p-2 entries">
+                {{ form.email.errors }}
+                <label for="{{ form.email.id_for_label }}">Email address: </label>
+                {{ form.email }}
+            </div>
+            <div class="d-flex justify-content-center">
+                    <input class="edit_prof_btn" type="submit" value="Update">
+            </div>
 
+        </form>
+    </div>
+</div>
 
 {% endblock %}
