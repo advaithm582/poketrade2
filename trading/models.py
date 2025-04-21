@@ -89,7 +89,7 @@ class Pokemon(models.Model):
     tcg_id = models.CharField(max_length=256, null=True, blank=True,
                               default=None, unique=True)
     name = models.CharField(max_length=256)
-    supertype = models.CharField(max_length=256, null=True)
+    supertype = models.CharField(max_length=256, null=True, blank=True)
     # NOTE: use the property ".subtypes", it is a list which will
     # do the serialization for you.
     subtype_l = models.TextField(default="");
@@ -115,22 +115,22 @@ class Pokemon(models.Model):
     # "children" of a pokemon since evolvesFrom is a PK.
 
     # separated by newlines
-    rules = models.TextField(default="");
+    rules = models.TextField(default="", blank=True);
 
     # To get abilities, refer to the docs:
     # https://docs.djangoproject.com/en/5.1/topics/db/queries/#following-relationships-backward
 
     # NOTE: use the property ".weaknesses", it is a hashmap which will
     # do the serialization for you.
-    weakness_h = models.TextField(default="");
+    weakness_h = models.TextField(default="", blank=True);
 
     # NOTE: use the property ".resistances", it is a hashmap which will
     # do the serialization for you.
-    resistance_h = models.TextField(default="");
+    resistance_h = models.TextField(default="", blank=True);
 
     # NOTE: use the property ".retreat_cost", it is a list which will
     # do the serialization for you.
-    retreat_l = models.TextField(default="");
+    retreat_l = models.TextField(default="", blank=True);
 
     # NOTE: use the virtual property ".converted_retreat_cost"
     # (non-editable)
@@ -138,17 +138,17 @@ class Pokemon(models.Model):
     # NOTE: set has been skipped with prior discussion with Hardik
 
     # NOTE: field name is misleading
-    number = models.CharField(max_length=64, default="");
+    number = models.CharField(max_length=64, default="", blank=True);
 
-    artist = models.CharField(max_length=256, default="");
+    artist = models.CharField(max_length=256, default="", blank=True);
 
 
 
-    flavorText = models.TextField(default="");
+    flavorText = models.TextField(default="", blank=True);
 
     # NOTE: use the property ".national_pokedex_numbers" instead, it is
     # a list which will do the serialization for you.
-    national_l = models.TextField(default="");
+    national_l = models.TextField(default="", blank=True);
 
     # If there is no code below, run the code generator!!
     # Rarity Field
@@ -170,7 +170,7 @@ class Pokemon(models.Model):
     
     # ~machine~end~{028c3792-35e5-4337-8947-67c7f0a8f139}
 
-    flavorText = models.TextField(default="");
+    flavorText = models.TextField(default="", blank=True);
 
     image = models.ImageField(upload_to='pokemon_images/')
     card = models.ImageField(upload_to='pokemon_card/', null=True,
