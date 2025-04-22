@@ -49,6 +49,7 @@ class User(AbstractUser):
     # The last time the user got a daily reward
     last_daily_reward = models.DateTimeField(null=True, blank=True)
 
+
     def gravatar(self, size=40, *, fallback="wavatar",
                  default="{username}@example.org"):
         """Get the User's Gravatar.

@@ -6,7 +6,8 @@ be under the Trading app.
 
 __all__ = ["PokemonListView", "PokemonDetailView",
            "UserPokemonListView", "BuyPokemonView",
-           "UpdateSellPriceView"]
+           "UpdateSellPriceView", "UserPokemonWishListView",
+           "WishPokemonView", "UnWishPokemonView"]
 __author__ = "Advaith Menon"
 
 from django.views.generic import ListView
@@ -19,8 +20,10 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import get_object_or_404, reverse
+from django.contrib import messages
 from django.db.models import Q
 
+from accounts.models import User
 from .models import Pokemon, TradingPolicy
 from .helpers import QueryParser, QueryableMixin
 
@@ -51,6 +54,21 @@ class UserPokemonListView(QueryableMixin, LoginRequiredMixin, ListView):
         # print("kwe:", type(self.kwargs.get("pk")))
         return super().get_queryset() \
                 .filter(owner__pk__exact=self.kwargs.get("pk"))
+
+
+class UserPokemonWishListView(QueryableMixin, LoginRequiredMixin, ListView):
+    """Lists a single users' Pokemon wishlist
+    """
+    model = User
+    context_object_name = "pokemons"
+    paginate_by = 100
+
+    def get_queryset(self):
+        if self._get_userquery() is not None:
+            return get_object_or_404(self.model, pk=self.kwargs["pk"]) \
+                    .wishlist.filter(self._get_pu())
+        return get_object_or_404(self.model, pk=self.kwargs["pk"]) \
+                .wishlist.all()
 
 
 class BuyPokemonView(LoginRequiredMixin, TemplateView):
@@ -98,6 +116,58 @@ class BuyPokemonView(LoginRequiredMixin, TemplateView):
         return super().get(request, *args, **kwargs)
 
 
+class UnWishPokemonView(LoginRequiredMixin, TemplateView):
+    """Wish a pokemon if the request is POST.
+    """
+    http_method_names = ["post", "delete", "options"]
+    template_name = "trading/bought_pokemon.html"
+
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def dispatch(self, request, *args, **kwargs):
+        # copied from the source code of the LogoutView
+        # TL;DR provides CSRF protection
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        pok_id = self.kwargs["pk"]
+        pok_obj = get_object_or_404(Pokemon, pk=pok_id)
+        pok_obj.wishers.remove(request.user)
+        pok_obj.save()
+        messages.success(request, "Pokemon removed from wishlist")
+        return super().get(request, *args, **kwargs)
+
+
+class WishPokemonView(LoginRequiredMixin, TemplateView):
+    """Wish a pokemon if the request is POST.
+    """
+    http_method_names = ["post", "delete", "options"]
+    template_name = "trading/bought_pokemon.html"
+
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def dispatch(self, request, *args, **kwargs):
+        # copied from the source code of the LogoutView
+        # TL;DR provides CSRF protection
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        pok_id = self.kwargs["pk"]
+        pok_obj = get_object_or_404(Pokemon, pk=pok_id)
+        pok_obj.wishers.add(request.user)
+        pok_obj.save()
+        messages.success(request, "Pokemon added to wishlist")
+        return super().get(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        pok_id = self.kwargs["pk"]
+        pok_obj = get_object_or_404(Pokemon, pk=pok_id)
+        pok_obj.wishers.delete(request.user)
+        pok_obj.save()
+        messages.success(request, "Pokemon removed from wishlist")
+        return super().get(request, *args, **kwargs)
+
+
 class UpdateSellPriceView(LoginRequiredMixin, UpdateView):
     model = Pokemon
     fields = ["sell_price"]
@@ -131,3 +201,9 @@ class PokemonDetailView(DetailView):
     model = Pokemon
     context_object_name = "the_pokemon"
 
+    def get_context_data(self, **kwargs):
+        # to modify message on search
+        ctx = super().get_context_data(**kwargs)
+        ctx["in_wishlist"] = \
+            self.get_object().wishers.filter(pk=self.request.user.pk).exists()
+        return ctx
