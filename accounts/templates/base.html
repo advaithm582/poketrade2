@@ -1,5 +1,5 @@
-{% load static %}
 {% load i18n %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,6 +47,22 @@
       </div>
     </nav>
 
+        {% if messages %}
+        {% for message in messages %}
+        <div class="message msg-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+
+        <div class="footer">
+            <ul>
+                <li><a href="/">Main Site</a></li>
+            </ul>
+        </div>
+    </body>
     <img src="{% static '/refimages/title.png' %}" class="title_image">
 
     <div class="container">
