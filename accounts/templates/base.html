@@ -25,8 +25,8 @@
         <span class="coin_display"><img class="coins" src="{% static '/refimages/coin.png' %}"></span>
         <ul class="navbar-nav">
           {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link box" href="">Market</a></li>
-            <li class="nav-item"><a class="nav-link box" href="">Collection</a></li>
+            <li class="nav-item"><a class="nav-link box" href="{% url "trading:list" %}?q=sell_price%2CGT%2C0">Market</a></li>
+            <li class="nav-item"><a class="nav-link box" href="{% url "trading:user_collection" user.pk %}">Collection</a></li>
             <li class="nav-item"><a class="nav-link box" href="">Wishlist</a></li>
             <li class="nav-item">
               <a class="nav-link box" href="{% url 'accounts:my_profile' %}">

@@ -26,7 +26,8 @@
         {% for pokemon in pokemons %}
         {% if pokemon.card %}
         <div class="col-sm-3 ">
-                <img class="img-fluid margin:5px" src="{{ pokemon.card.url }}" alt="Card image cap">
+            <img class="img-fluid margin:5px" src="{{ pokemon.card.url }}" alt="Card image cap">
+            <span><a href="{% url "trading:single_detail" pokemon.pk %}">view</a></span>
         </div>
         {% endif %}
         {% endfor %}
