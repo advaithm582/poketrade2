@@ -46,6 +46,13 @@
         </ul>
       </div>
     </nav>
+    <img src="{% static '/refimages/title.png' %}" class="title_image">
+
+    <div class="container">
+      {% block content %}
+      <div id="image-row"></div>
+      {% endblock %}
+    </div>
 
         {% if messages %}
         {% for message in messages %}
@@ -54,22 +61,6 @@
         </div>
         {% endfor %}
         {% endif %}
-        {% block content %}
-        {% endblock %}
-
-        <div class="footer">
-            <ul>
-                <li><a href="/">Main Site</a></li>
-            </ul>
-        </div>
-    </body>
-    <img src="{% static '/refimages/title.png' %}" class="title_image">
-
-    <div class="container">
-      {% block content %}
-      <div id="image-row"></div>
-      {% endblock %}
-    </div>
 
   </body>
 </html>
