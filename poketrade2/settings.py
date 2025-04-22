@@ -142,5 +142,9 @@ MEDIA_URL = "/user_uploads/"
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
 
+# TODO: remove in prod
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 # Poketrade Settings
 POKETRADE_DAILY_REWARD = 100
