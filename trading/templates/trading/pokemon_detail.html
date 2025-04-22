@@ -2,108 +2,116 @@
 {% block title %}{{ the_pokemon.name }} - Stats{% endblock %}
 
 {% block content %}
-<h1>{{ the_pokemon.name }}</h1>
-<hr>
+<style>
+.card {
+    display: flex;
+    background-color: #f44336;
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: auto;
+}
+.card .image-section {
+    flex: 1;
+    background-color: #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card .image-section img {
+    width: 200px;
+}
+.card .info-section {
+    flex: 1;
+    background-color: #4CAF50;
+    border-radius: 12px;
+    padding: 20px;
+    color: #fff;
+}
+.types span {
+    background-color: #a5d6a7;
+    color: #1b5e20;
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+.subtypes li {
+    display: inline;
+    margin-right: 8px;
+    background: #81c784;
+    padding: 3px 6px;
+    border-radius: 5px;
+}
+.info-label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: inline-block;
+}
+.buy-button {
+    background-color: #00e676;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    color: black;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+}
+</style>
 
-<table>
-    <tr>
-        <td>
-            Image:
-        </td>
-        <td>
-            <img src="{{ the_pokemon.image.url }}" alt="pokemon card">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Name:
-        </td>
-        <td>
-            {{ the_pokemon.name }}
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Supertype:
-        </td>
-        <td>
-            {% if the_pokemon.supertype %}
-            {{ the_pokemon.supertype }}
-            {% else %}
-            <em>n/a</em>
-            {% endif %}
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Subtype:
-        </td>
-        <td>
-            {% if the_pokemon.subtypes %}
-            <ul>
-            {% for st in the_pokemon.subtypes %}
-            <li>{{ st }}</li>
-            {% endfor %}
+<div class="card">
+    <div class="image-section">
+        <img src="{{ the_pokemon.image.url }}" alt="{{ the_pokemon.name }}">
+    </div>
+    <div class="info-section">
+        <h2>{{ the_pokemon.name }}</h2>
+
+        {% if the_pokemon.supertype %}
+            <div class="info-label">Supertype:</div> {{ the_pokemon.supertype }}<br>
+        {% endif %}
+
+        {% if the_pokemon.subtypes %}
+            <div class="info-label">Subtypes:</div>
+            <ul class="subtypes">
+                {% for st in the_pokemon.subtypes %}
+                <li>{{ st }}</li>
+                {% endfor %}
             </ul>
-            {% else %}
-            <em>n/a</em>
-            {% endif %}
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Health Points:
-        </td>
-        <td>
-            {% if the_pokemon.hp >= 0  %}
-            {{ the_pokemon.hp }}
-            {% else %}
-            <em>unknown</em>
-            {% endif %}
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Types:
-        </td>
-        <td>
-            {% if the_pokemon.types %}
-            <ul>
-            {% for st in the_pokemon.types %}
-            <li>{{ st }}</li>
-            {% endfor %}
-            </ul>
-            {% else %}
-            <em>n/a</em>
-            {% endif %}
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Description:
-        </td>
-        <td>
-            {% if the_pokemon.description %}
-            {{ the_pokemon.description }}
-            {% else %}
-            <em>n/a</em>
-            {% endif %}
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Evolves from:
-        </td>
-        <td>
-            {% if the_pokemon.evolves_from %}
-            <a href="{% url "trading:single_detail" the_pokemon.evolves_from.pk %}">
+        {% endif %}
+
+        {% if the_pokemon.types %}
+            <div class="info-label">Types:</div>
+            <div class="types">
+                {% for type in the_pokemon.types %}
+                    <span>{{ type }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if the_pokemon.hp >= 0 %}
+            <div class="info-label">HP:</div> {{ the_pokemon.hp }}<br>
+        {% endif %}
+
+        {% if the_pokemon.description %}
+            <div class="info-label">Description:</div>
+            <p>{{ the_pokemon.description }}</p>
+        {% endif %}
+
+        <div class="info-label">Evolves from:</div>
+        {% if the_pokemon.evolves_from %}
+            <a href="{% url 'trading:single_detail' the_pokemon.evolves_from.pk %}">
                 {{ the_pokemon.evolves_from.name }}
             </a>
-            {% else %}
+        {% else %}
             <em>nothing</em>
-            {% endif %}
-        </td>
-    </tr>
-</table>
-{% endblock %}
+        {% endif %}
 
+        <br><br>
+        <button class="buy-button">Buy</button>
+    </div>
+</div>
+{% endblock %}
