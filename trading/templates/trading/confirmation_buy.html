@@ -1,0 +1,13 @@
+<div id="sellModal" class="modal">
+    <div class="modal-content">
+      <p>Are you sure you want to buy <strong>{{ the_pokemon.name }}</strong> for <strong>{{ cost_price }}</strong> coins?</p>
+      <form method="POST" action="{% url 'sell_pokemon' the_pokemon.id %}"> 
+        {% csrf_token %}
+        <div class="modal-buttons">
+          <button type="submit" onClick="buyPokemon()">Yes</button>
+          <button type="button" onclick="closeModal()">No</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
