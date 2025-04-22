@@ -197,6 +197,9 @@ class Pokemon(models.Model):
                               null=True, blank=True,
                               related_name="pokemons")
 
+    wishers = models.ManyToManyField(User,
+                                     related_name="wishlist")
+
     def __str__(self):
         return self.name
 
