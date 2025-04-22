@@ -63,6 +63,11 @@ class UserPokemonWishListView(QueryableMixin, LoginRequiredMixin, ListView):
     context_object_name = "pokemons"
     paginate_by = 100
 
+    # defines the custom query
+    generic_qparse = QueryParser(valid_fields={"name": str, "hp": int,
+                            "rarity": str, "sell_price": float,
+                            "owner__username": str})
+
     def get_queryset(self):
         if self._get_userquery() is not None:
             return get_object_or_404(self.model, pk=self.kwargs["pk"]) \
