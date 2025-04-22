@@ -116,6 +116,17 @@
 
         <br><br>
         <button class="buy-button">Buy</button>
+        {% if in_wishlist %}
+            <form method="post" action="{% url "trading:unwish" the_pokemon.pk %}">
+                {% csrf_token %}
+                <button type="submit">unwish</button>
+            </form>
+        {% else %}
+            <form method="post" action="{% url "trading:wish" the_pokemon.pk %}">
+                {% csrf_token %}
+                <button type="submit">wish</button>
+            </form>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
