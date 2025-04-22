@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow p-3 mb-4 rounded">
+                <div class="card-body">
+                    <h2>{% translate "Sign Up: Final Step" %}</h2>
+                    <hr />
+                    <div class="alert alert-warning">
+                        You have until {{ exp|date:"m/d/Y H:i:s" }} to finish
+                        your registration.
+                    </div>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit"
+                                class="btn bg-dark text-white">
+                            {% translate "Sign Up" %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

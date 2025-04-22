@@ -3,4 +3,5 @@ dacite==1.9.2
 Django==5.2
 pillow==11.1.0
 pokemontcgsdk==3.4.0
+PyJWT==2.10.1
 sqlparse==0.5.3

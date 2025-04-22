@@ -21,5 +21,7 @@ urlpatterns = [
         path("profile/", v.my_profile, name="my_profile"),
         path("profile/pokemon", v.MyPokemonsListView.as_view(),
              name="my_pokemon"),
+        path("signup/init", v.signup_v2_init, name="signup"),
+        path("signup/verify/<str:token>", v.signup_v2_verify, name="sverify"),
         ]
 

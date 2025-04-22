@@ -1,0 +1,29 @@
+Hi {{ email }},
+
+A registration request for a PokeTrade Account was requested for this
+address. If you did not request for such an account, please disregard this mail.
+
+If you requested for an account, please click on this link to complete the
+process:
+
+{{ link }}
+
+The link will expire in 10 minutes from the request time.
+
+Warm regards,
+Advaith Menon on behalf of PokeTrade
+
+-----
+INFORMATION: This application is intended as a demonstration of the CS 2340
+class project. By registering for this application, you acknowledge that you
+have the necessary authorization to do so, and waive any liability caused due to
+security bugs in the software. The authors WILL NOT take responsibility for
+protecting your data in any manner, so do not enter any personally identifiable
+information.
+
+GT and the Georgia Tech logo are trademarks of the Georgia Institute of
+Technology.
+
+If you are a hacker, stop right now. Seriously, there is no data here. Go and
+hack websites that are actually worth hacking.
+
