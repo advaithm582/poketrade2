@@ -109,14 +109,20 @@
 
         <div class="info-label">Evolves from:</div>
         {% if the_pokemon.evolves_from %}
-                {{ the_pokemon.evolves_from }}
+            {{ the_pokemon.evolves_from }}
         {% else %}
             <em>nothing</em>
         {% endif %}
 
         <br><br>
-        <button class="buy-button">Buy</button>
-        {% if in_wishlist %}
+        {% if the_pokemon.owner.username %}
+            <form method="post" action="{% url "trading:sell_single" the_pokemon.pk %}">
+                {% csrf_token %}
+                <button type="submit">Sell</button>
+            </form>
+        {% else %}
+            <button class="buy-button">Buy</button>
+            {% if in_wishlist %}
             <form method="post" action="{% url "trading:unwish" the_pokemon.pk %}">
                 {% csrf_token %}
                 <button type="submit">unwish</button>
@@ -127,6 +133,8 @@
                 <button type="submit">wish</button>
             </form>
         {% endif %}
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}
