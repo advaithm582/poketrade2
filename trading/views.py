@@ -98,7 +98,7 @@ class BuyPokemonView(LoginRequiredMixin, TemplateView):
 
         # subtract its sell price to your account
         if self.request.user.coins < pok_obj.sell_price:
-            raise PermissionDenied("Not enough couns to buy Pokemon")
+            raise PermissionDenied("Not enough coins to buy Pokemon")
         self.request.user.coins -= pok_obj.sell_price
 
         # add sell price to owner (if exists)

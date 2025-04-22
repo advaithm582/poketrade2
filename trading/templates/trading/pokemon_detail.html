@@ -4,9 +4,6 @@
 {% block content %}
 <style>
 .card {
-    display: flex;
-    flex-direction: row;       
-    flex-wrap: nowrap;         
     background-color: #f44336;
     border-radius: 20px;
     padding: 20px;
@@ -15,29 +12,34 @@
     max-width: 800px;
     margin: auto;
 }
-.card .card-image-section {
-    flex: 1;
-    background-color: #e0e0e0;
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0px 1rem;
-    
-}
-.card .card-image-section img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
+
 .card .info-section {
-    flex: 1;
     background-color: #4CAF50;
     border-radius: 12px;
     padding: 20px;
     color: #fff;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-start;
 }
+
+.card .info-text {
+    flex: 1;
+    min-width: 250px;
+}
+
+.card .image-right {
+    flex-shrink: 0;
+    align-self: flex-start;
+}
+
+.card .image-right img {
+    width: 200px;
+    border-radius: 8px;
+}
+
 .types span {
     background-color: #a5d6a7;
     color: #1b5e20;
@@ -67,77 +69,126 @@
     margin-top: 20px;
     cursor: pointer;
 }
+
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+@media (max-width: 800px) {
+  .card .info-section {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: nowrap; 
+  }
+
+  .card .info-text {
+    flex: 1 1 60%;
+    min-width: 0; 
+  }
+
+  .card .image-right {
+    flex: 0 0 auto;
+    align-self: flex-start;
+  }
+
+  .card .image-right img {
+    width: 200px; 
+    max-width: 100%;
+    height: auto;
+  }
+
+  .card .buttons-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .card .buy-button,
+  .card .buttons-container button {
+    margin: 10px auto;
+    display: inline-block;
+  }
+}
 </style>
 
 <div class="card">
-    <div class="card-image-section">
-        <img src="{{ the_pokemon.card.url }}" alt="{{ the_pokemon.name }}">
-    </div>
     <div class="info-section">
-        <h2>{{ the_pokemon.name }}</h2>
+        <div class="info-text">
+            <h2>{{ the_pokemon.name }}</h2>
 
-        {% if the_pokemon.supertype %}
-            <div class="info-label">Supertype:</div> {{ the_pokemon.supertype }}<br>
-        {% endif %}
+            {% if the_pokemon.supertype %}
+                <div class="info-label">Supertype:</div> {{ the_pokemon.supertype }}<br>
+            {% endif %}
 
-        {% if the_pokemon.subtypes %}
-            <div class="info-label">Subtypes:</div>
-            <ul class="subtypes">
-                {% for st in the_pokemon.subtypes %}
-                <li>{{ st }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+            {% if the_pokemon.subtypes %}
+                <div class="info-label">Subtypes:</div>
+                <ul class="subtypes">
+                    {% for st in the_pokemon.subtypes %}
+                    <li>{{ st }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
 
-        {% if the_pokemon.types %}
-            <div class="info-label">Types:</div>
-            <div class="types">
-                {% for type in the_pokemon.types %}
-                    <span>{{ type }}</span>
-                {% endfor %}
+            {% if the_pokemon.types %}
+                <div class="info-label">Types:</div>
+                <div class="types">
+                    {% for type in the_pokemon.types %}
+                        <span>{{ type }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if the_pokemon.hp >= 0 %}
+                <div class="info-label">HP:</div> {{ the_pokemon.hp }}<br>
+            {% endif %}
+
+            {% if the_pokemon.flavorText %}
+                <div class="info-label">Description:</div>
+                <p>{{ the_pokemon.flavorText }}</p>
+            {% endif %}
+
+            <div class="info-label">Evolves from:</div>
+            {% if the_pokemon.evolves_from %}
+                {{ the_pokemon.evolves_from }}
+            {% else %}
+                <em>nothing</em>
+            {% endif %}
+
+            <br><br>
+            <div class = "buttons-container">
+            {% if the_pokemon.owner.username %}
+                <form method="post" action="{% url "trading:sell_single" the_pokemon.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">Sell</button>
+                </form>
+            {% else %}
+                <form method="post" action="{% url "trading:buy_single" the_pokemon.pk %}">
+                    {% csrf_token %}
+                    <button class="buy-button" type="submit">Buy</button> 
+                </form> 
+                {% if in_wishlist %}
+                    <form method="post" action="{% url "trading:unwish" the_pokemon.pk %}">
+                        {% csrf_token %}
+                        <button type="submit">unwish</button>
+                    </form>
+                {% else %}
+                    <form method="post" action="{% url "trading:wish" the_pokemon.pk %}">
+                        {% csrf_token %}
+                        <button type="submit">wish</button>
+                    </form>
+                {% endif %}
+            {% endif %}
             </div>
-        {% endif %}
-
-        {% if the_pokemon.hp >= 0 %}
-            <div class="info-label">HP:</div> {{ the_pokemon.hp }}<br>
-        {% endif %}
-
-        {% if the_pokemon.flavorText %}
-            <div class="info-label">Description:</div>
-            <p>{{ the_pokemon.flavorText }}</p>
-        {% endif %}
-
-        <div class="info-label">Evolves from:</div>
-        {% if the_pokemon.evolves_from %}
-            {{ the_pokemon.evolves_from }}
-        {% else %}
-            <em>nothing</em>
-        {% endif %}
-
-        <br><br>
-        {% if the_pokemon.owner.username %}
-            <form method="post" action="{% url "trading:sell_single" the_pokemon.pk %}">
-                {% csrf_token %}
-                <button type="submit">Sell</button>
-            </form>
-        {% else %}
-            <button class="buy-button">Buy</button>
-            {% if in_wishlist %}
-            <form method="post" action="{% url "trading:unwish" the_pokemon.pk %}">
-                {% csrf_token %}
-                <button type="submit">unwish</button>
-            </form>
-        {% else %}
-            <form method="post" action="{% url "trading:wish" the_pokemon.pk %}">
-                {% csrf_token %}
-                <button type="submit">wish</button>
-            </form>
-        {% endif %}
-        {% endif %}
-
+        </div>
+        <div class="image-right">
+            <img src="{{ the_pokemon.card.url }}" alt="{{ the_pokemon.name }}">
+        </div>
     </div>
 </div>
 {% endblock %}
-
-
-
