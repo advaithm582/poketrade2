@@ -81,37 +81,93 @@
                 <li>{{ st }}</li>
                 {% endfor %}
             </ul>
-        {% endif %}
-
-        {% if the_pokemon.types %}
-            <div class="info-label">Types:</div>
-            <div class="types">
-                {% for type in the_pokemon.types %}
-                    <span>{{ type }}</span>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        {% if the_pokemon.hp >= 0 %}
-            <div class="info-label">HP:</div> {{ the_pokemon.hp }}<br>
-        {% endif %}
-
-        {% if the_pokemon.description %}
-            <div class="info-label">Description:</div>
-            <p>{{ the_pokemon.description }}</p>
-        {% endif %}
-
-        <div class="info-label">Evolves from:</div>
-        {% if the_pokemon.evolves_from %}
-            <a href="{% url 'trading:single_detail' the_pokemon.evolves_from.pk %}">
-                {{ the_pokemon.evolves_from.name }}
-            </a>
-        {% else %}
+            {% else %}
+            <em>n/a</em>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Health Points:
+        </td>
+        <td>
+            {% if the_pokemon.hp >= 0  %}
+            {{ the_pokemon.hp }}
+            {% else %}
+            <em>unknown</em>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Types:
+        </td>
+        <td>
+            {% if the_pokemon.types %}
+            <ul>
+            {% for st in the_pokemon.types %}
+            <li>{{ st }}</li>
+            {% endfor %}
+            </ul>
+            {% else %}
+            <em>n/a</em>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Description:
+        </td>
+        <td>
+            {% if the_pokemon.description %}
+            {{ the_pokemon.description }}
+            {% else %}
+            <em>n/a</em>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Evolves from:
+        </td>
+        <td>
+            {% if the_pokemon.evolves_from %}
+            {{ the_pokemon.evolves_from }}
+            {% else %}
             <em>nothing</em>
-        {% endif %}
-
-        <br><br>
-        <button class="buy-button">Buy</button>
-    </div>
-</div>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Buy:
+        </td>
+        <td>
+            {% if the_pokemon.trading_policy == 1 %}
+            <form method="post"
+                  action="{% url "trading:buy_single" the_pokemon.pk %}">
+                {% csrf_token %}
+                <button type="submit">
+                    Buy for {{ the_pokemon.sell_price }}
+                </button>
+            </form>
+            {% elif the_pokemon.trading_policy == 2 %}
+            {% if the_pokemon.owner == user %}
+            Your Pokemon!&nbsp;|&nbsp;
+            <a href="{% url "trading:sell_single" the_pokemon.pk %}">
+                sell
+            </a>
+            {% else %}
+            Claimed by
+            <a href="{% url "accounts:profile" the_pokemon.owner.pk %}">
+                {{ the_pokemon.owner.username }}
+            </a>
+            {% endif %}
+            {% else %}
+                Reserved for new users
+            {% endif %}
+        </td>
+    </tr>
+</table>
 {% endblock %}
+
