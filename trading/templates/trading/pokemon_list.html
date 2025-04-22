@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}All Pokemons{% endblock %}
+
+{% block content %}
+<h1>All Pokemons</h1>
+<hr>
+
+{% if not pokemons %}
+<div class="message msg-info">
+    {% if query_str %}
+    There are no such Pokemon
+    {% else %}
+    There are no pokemons in this site.
+    {% endif %}
+</div>
+{% endif %}
+
+<form method="GET">
+    <input type="text" name="s" placeholder="Search..."
+        value="{{ query_str }}">
+    <input type="submit" value="Search">
+</form>
+
+    <div class="card-deck">
+        {% for pokemon in pokemons %}
+        {% if pokemon.card %}
+        <div class="col-sm-3 ">
+            <img class="img-fluid margin:5px" src="{{ pokemon.card.url }}" alt="Card image cap">
+            <span><a href="{% url "trading:single_detail" pokemon.pk %}">view</a></span>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+
+
+
+<p>
+{% if page_obj.has_previous %}
+<a href="?page=1">&laquo; first</a>
+&nbsp;|&nbsp;
+<a href="?page={{ page_obj.previous_page_number }}">previous</a>
+&nbsp;|&nbsp;
+{% endif %}
+<em>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</em>
+{% if page_obj.has_next %}
+&nbsp;|&nbsp;
+<a href="?page={{ page_obj.next_page_number }}">next</a>
+&nbsp;|&nbsp;
+<a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+{% endif %}
+</p>
+
+<hr>
+{% endblock %}
+

@@ -2,74 +2,33 @@
 {% block title %}{{ the_user.username }}'s profile{% endblock %}
 
 {% block content %}
-<h1>Profile: {{ the_user.username }}</h1>
-<hr>
-
-<table>
-    <tr>
-        <td>
-            Avatar:
-        </td>
-        <td>
-            <img src="{{ the_user.gravatar_64 }}" alt="the_user profile">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Username:
-        </td>
-        <td>
-            <span class="code">
-                {{ the_user.username }}
-            </span>
-        </td>
-    </tr>
-    {% if the_user.first_name %}
-    <tr>
-        <td>
-            First Name:
-        </td>
-        <td>
-            {{ the_user.first_name }}
-        </td>
-    </tr>
-    {% endif %}
-    {% if the_user.last_name %}
-    <tr>
-        <td>
-            Last Name:
-        </td>
-        <td>
-            {{ the_user.last_name }}
-        </td>
-    </tr>
-    {% endif %}
-    <tr>
-        <td>
-            Coins:
-        </td>
-        <td>
-            {{ the_user.coins }}
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Streak:
-        </td>
-        <td>
-            {{ the_user.streak }}
-        </td>
-    </tr>
-    {% if user == the_user %}
-    <tr>
-        <td>
-            Edit Profile:
-        </td>
-        <td>
-            <a href="{% url 'accounts:edit_profile' user.pk %}">Edit</a>
-        </td>
-    </tr>
-    {% endif %}
-</table>
+<div class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <div class="p-2 profhead">Profile</div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-sm">
+                    <img class="profpic" src="{{ the_user.gravatar_64 }}" alt="">
+                </div>
+                <div class="col-sm-9">
+                    <div class="p-2 entries">Username: {{ the_user.username }}</div>
+                    {% if the_user.first_name %}
+                        <div class="p-2 entries">First Name: {{ the_user.first_name }}</div>
+                    {% endif %}
+                    {% if the_user.last_name %}
+                        <div class="p-2 entries">Last Name: {{ the_user.last_name }}</div>
+                    {% endif %}
+                    <div class="p-2 entries">Coins: {{ the_user.coins }}</div>
+                    <div class="p-2 entries">Streak: {{ the_user.streak }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <a href="{% url 'accounts:edit_profile' user.pk %}">
+                <button class="edit_prof_btn" >Edit Profile</button>
+            </a>
+        </div>
+</div>
 {% endblock %}
 

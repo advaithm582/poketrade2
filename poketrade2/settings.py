@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,6 +40,8 @@ AUTH_USER_MODEL = "accounts.User"
 INSTALLED_APPS = [
     # add Accounts app (configuration class)
     "accounts.apps.AccountsConfig",
+    # add Trading app (singular app for pokemon related stuff)
+    "trading.apps.TradingConfig",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -128,3 +131,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Media root is in pictures folder
+MEDIA_ROOT = os.path.expanduser("~/Pictures/poketrade2")
+MEDIA_URL = "/user_uploads/"

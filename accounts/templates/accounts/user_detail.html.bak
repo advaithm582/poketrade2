@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ the_user.username }}'s profile{% endblock %}
+
+{% block content %}
+<h1>Profile: {{ the_user.username }}</h1>
+<hr>
+
+<table>
+    <tr>
+        <td>
+            Avatar:
+        </td>
+        <td>
+            <img src="{{ the_user.gravatar_64 }}" alt="the_user profile">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Username:
+        </td>
+        <td>
+            <span class="code">
+                {{ the_user.username }}
+            </span>
+        </td>
+    </tr>
+    {% if the_user.first_name %}
+    <tr>
+        <td>
+            First Name:
+        </td>
+        <td>
+            {{ the_user.first_name }}
+        </td>
+    </tr>
+    {% endif %}
+    {% if the_user.last_name %}
+    <tr>
+        <td>
+            Last Name:
+        </td>
+        <td>
+            {{ the_user.last_name }}
+        </td>
+    </tr>
+    {% endif %}
+    <tr>
+        <td>
+            Coins:
+        </td>
+        <td>
+            {{ the_user.coins }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Streak:
+        </td>
+        <td>
+            {{ the_user.streak }}
+        </td>
+    </tr>
+    {% if user == the_user %}
+    <tr>
+        <td>
+            Edit Profile:
+        </td>
+        <td>
+            <a href="{% url 'accounts:edit_profile' user.pk %}">Edit</a>
+        </td>
+    </tr>
+    {% endif %}
+</table>
+{% endblock %}
+
