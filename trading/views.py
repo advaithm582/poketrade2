@@ -18,7 +18,7 @@ from .helpers import QueryParser, QueryableMixin
 class PokemonListView(QueryableMixin, ListView):
     """Lists all Pokemon.
     """
-    # template name is trading/pokemon_list.html.bak
+    # template name is trading/pokemon_list.html
     # the default ^^ is okay
     model = Pokemon
     context_object_name = "pokemons"
