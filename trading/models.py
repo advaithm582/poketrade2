@@ -371,6 +371,9 @@ class Ability(models.Model):
                 models.Index(fields=["name"], name="ix_ability_name"),
                 ];
 
+    def __repr__(self):
+        return "<Ability id=%s, name=%s>" % (id, name);
+
 
 class Attack(models.Model):
     """Represents the attacks of a Pokemon.
