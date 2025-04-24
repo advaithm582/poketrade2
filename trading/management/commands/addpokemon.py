@@ -15,7 +15,7 @@ from django.core.files import File
 from pokemontcgsdk import Card
 from PIL import Image
 
-from trading.models import Pokemon
+from trading.models import Pokemon, Ability
 
 
 # Offset values for cropping - don't change
@@ -82,9 +82,32 @@ class Command(BaseCommand):
         poke.image.save(os.path.split(url)[1], File(post_crop), save=False)
         post_crop.close()
 
+    def _ability_check(self, abil):
+        """Check if an Ability is already present in the database.
+
+        :param abil: The ability to check for
+        :return: The Ability object (will be created if nonexistent)
+        """
+        # query the database
+        a = Ability.objects.filter(name=abil.name, text=abil.text or "",
+                                   type=abil.type or "")
+        if not a:
+            a = Ability.objects.create(name=abil.name,
+                                       text=abil.text or "",
+                                       type=abil.type or "")
+            return a
+        return a[0]
 
     def _add_pokemon(self, poke):
         pk = Pokemon()
+        self._update_pokemon(pk, poke)
+
+    def _update_pokemon(self, pk, poke):
+        self._update_attrib_poke(pk, poke)
+        pk.save()
+
+    def _update_attrib_poke(self, pk, poke):
+        """Update pokemon attributes"""
         pk.tcg_id = poke.id
         pk.name = poke.name
         if pk.supertype:
@@ -95,8 +118,8 @@ class Command(BaseCommand):
             try:
                 pk.hp = int(poke.hp)
             except ValueError:
-                sys.stderr.write("    * Cannot add HP for this Pokemon")
-                sys.stderr.write("      {} is not an integer".format(poke.hp))
+                sys.stderr.write("  * Cannot add HP for this Pokemon")
+                sys.stderr.write("    {} is not an integer".format(poke.hp))
 
         if poke.types:
             pk.types = poke.types
@@ -123,26 +146,43 @@ class Command(BaseCommand):
             pk.trend_price = poke.cardmarket.prices.trendPrice
             pk.suggested_price = poke.cardmarket.prices.suggestedPrice
 
+        if poke.abilities is not None:
+            for ability in poke.abilities:
+                # get the object
+                pk.ability_set.add(self._ability_check(ability))
+
         if poke.images:
             try:
                 self._handle_image(poke.images.large or poke.images.small,
                                    pk)
             except Exception as e:
-                self.stderr.write("    * cannot add image {} {}".format(
+                self.stderr.write("  * cannot add image {} {}".format(
                     e.__class__.__name__, str(e)))
-        pk.save()
 
 
     def add_arguments(self, parser):
         parser.add_argument("-q", help="Query string",
                             default="")
+        parser.add_argument("-u", "--update",
+                            help="Update objects with new data",
+                            action="store_true")
 
     def handle(self, *args, **options):
         self.stdout.write("Query: {}".format(repr(options["q"])))
+        self.stdout.write(("" if options["update"] else "NOT ")
+                          + "Updating")
         for poke in Card.where(q=options["q"]):
             self.stdout.write("Adding {}".format(repr(poke.name)))
-            if Pokemon.objects.filter(tcg_id__exact=poke.id):
-                self.stdout.write("    * Already exists in DB")
+            pk = Pokemon.objects.filter(tcg_id__exact=poke.id)
+            if pk:
+                self.stdout.write("  * Already exists in DB")
+
+                if not options["update"]:
+                    continue
+
+                pk = pk[0]
+                self.stdout.write("  * Updating attributes")
+                self._update_pokemon(pk, poke)
                 continue
             self._add_pokemon(poke)
 
