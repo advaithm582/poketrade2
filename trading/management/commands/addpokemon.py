@@ -8,12 +8,14 @@ __author__ = "Advaith Menon"
 
 import urllib.request
 import os
+import time
 import tempfile
 
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files import File
 from pokemontcgsdk import Card
 from PIL import Image
+from google import genai
 
 from trading.models import Pokemon, Ability
 
@@ -23,6 +25,25 @@ X = 0.11
 Y = 0.12
 A = 0.78
 B = 0.52
+
+
+# Prompt to AI for flavorText
+GEN_AI_PROMPT = ("""You are given the following card:
+Name: {name}
+Supertype: {supertype}
+Subtypes: {subtypes}
+HP: {hp}
+Types: {types}
+Evolves From: {evolves_from}
+Rules: {rules}
+Weakness: {weakness}
+Resistance: {resistance}
+Retreats: {retreats}
+
+"""
+"Generate a \"Flavor Text\" for this pokemon. Feel free to use any "
+"resource. Do not output any additional text other than the flavor "
+"text itself, output will be added directly to a database.")
 
 
 def _get_crop_vals(x, y):
@@ -159,6 +180,30 @@ class Command(BaseCommand):
                 self.stderr.write("  * cannot add image {} {}".format(
                     e.__class__.__name__, str(e)))
 
+    def _gen_ai_prompt(self, pk):
+        """Create a GenAI object, given a database Pokemon object.
+
+        :param pk: A database pokemon object
+        :return: A string with a prompt.
+        """
+        prompt = GEN_AI_PROMPT.format(
+                name=pk.name,
+                supertype=pk.supertype or "None",
+                subtypes=", ".join(pk.subtypes),
+                hp=pk.hp,
+                types=", ".join(pk.types),
+                evolves_from=pk.evolves_from or "None",
+                rules=pk.rules or "None",
+                weakness="\n  * ".join(("%s: %s" % (k, v)
+                                        for k, v in pk.weaknesses.items())),
+                resistance="\n  * ".join(("%s: %s" % (k, v)
+                                        for k, v in pk.resistances.items())),
+                retreats=", ".join(pk.retreat_cost))
+        response = self.client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=prompt)
+        return response.text
+
 
     def add_arguments(self, parser):
         parser.add_argument("-q", help="Query string",
@@ -166,16 +211,26 @@ class Command(BaseCommand):
         parser.add_argument("-u", "--update",
                             help="Update objects with new data",
                             action="store_true")
+        parser.add_argument("-f", "--gen-ai-fill",
+                            help="Fill empty fields with Generative AI",
+                            action="store_true")
+        parser.add_argument("--verbose", action="store_true")
 
     def handle(self, *args, **options):
         self.stdout.write("Query: {}".format(repr(options["q"])))
         self.stdout.write(("" if options["update"] else "NOT ")
                           + "Updating")
+        if options["gen_ai_fill"]:
+            if os.getenv("GEMINI_API_KEY") is None:
+                raise CommandError("API key not set")
+            self.client = genai.Client(
+                    api_key=os.getenv("GEMINI_API_KEY"))
         for poke in Card.where(q=options["q"]):
             self.stdout.write("Adding {}".format(repr(poke.name)))
             pk = Pokemon.objects.filter(tcg_id__exact=poke.id)
+            timeout = 0
             if pk:
-                self.stdout.write("  * Already exists in DB")
+                self.stderr.write("  * Already exists in DB")
 
                 if not options["update"]:
                     continue
@@ -183,7 +238,28 @@ class Command(BaseCommand):
                 pk = pk[0]
                 self.stdout.write("  * Updating attributes")
                 self._update_pokemon(pk, poke)
-                continue
-            self._add_pokemon(poke)
+            else:
+                self._add_pokemon(poke)
 
+            if options["gen_ai_fill"] and not pk.flavorText:
+                self.stdout.write("  * Filling AI generated flavor text")
+                while True:
+                    try:
+                        pk.flavorText = self._gen_ai_prompt(pk)
+                    except genai.errors.ClientError:
+                        if timeout == 0:
+                            timeout = 10
+                        else:
+                            timeout = 2 * timeout
+                        self.stdout.write("      * Request Timeout")
+                        self.stdout.write("      * Wait %d seconds" % timeout)
+                        time.sleep(timeout)
+                    else:
+                        timeout = 0
+                        break
+
+                pk.save()
+
+            if options["verbose"]:
+                self.stdout.write("  * Pokenon ID is: %s" % pk.pk)
 
