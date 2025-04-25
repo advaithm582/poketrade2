@@ -21,7 +21,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <span class="coin_display"><img class="coins" src="{% static '/refimages/coin.png' %}"></span>
+        <span class="coin_display"><img class="coins" src="{% static '/refimages/coin.png' %}">{{ user.coins }}</span>
         <ul class="navbar-nav">
           {% if user.is_authenticated %}
               <li class="nav-item"><a type="button" class="nav-link" href="{% url "trading:list" %}?q=sell_price%2CGT%2C0">Market</a></li>
