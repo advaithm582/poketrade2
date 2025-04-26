@@ -141,10 +141,7 @@
             </form>
             {% elif the_pokemon.trading_policy == 2 %}
             {% if the_pokemon.owner == user %}
-            Your Pokemon!&nbsp;|&nbsp;
-            <a href="{% url "trading:sell_single" the_pokemon.pk %}">
-                sell
-            </a>
+            Your Pokemon
             {% else %}
             Claimed by
             <a href="{% url "accounts:profile" the_pokemon.owner.pk %}">
@@ -157,5 +154,16 @@
         </td>
     </tr>
 </table>
+<hr>
+<h1>SellPokemom</h1>
+<p><em>Setting a nonzero value puts your pokemon for sale, making it zero
+    cancels the sale</em></p>
+<hr>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Update Price">
+</form>
+
 {% endblock %}
 

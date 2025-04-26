@@ -185,7 +185,10 @@ class UpdateSellPriceView(LoginRequiredMixin, UpdateView):
     model = Pokemon
     fields = ["sell_price"]
     # trading/pokemon_update.html
-    template_name_suffix = "_update"
+    template_name = "trading/pokemon_detail.html"
+    context_object_name = "the_pokemon"
+    #template_name_suffix = "_update"
+    # template_name_suffix = "_update"
 
     def get_object(self, *args, **kw):
         """Get the object requested by the user.
@@ -206,7 +209,8 @@ class UpdateSellPriceView(LoginRequiredMixin, UpdateView):
             This is the profile just edited.
         :rtype: str
         """
-        return reverse("trading:list")
+        messages.success(self.request, "Updated sale price!")
+        return reverse("trading:single_detail", args=[self.object.pk])
 
 
 class PokemonDetailView(DetailView):
