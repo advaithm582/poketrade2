@@ -339,7 +339,7 @@ class Pokemon(models.Model):
             return TradingPolicy.RESERVED_FOR_NEW_USERS
 
     def __repr__(self):
-        return "<Pokemon id=%s, name=%s>" % (self.id, self.name);
+        return "<Pokemon id=%s, name=%s>" % (self.pk, self.name);
 
 
 class Ability(models.Model):
@@ -360,7 +360,7 @@ class Ability(models.Model):
                 ];
 
     def __repr__(self):
-        return "<Ability id=%s, name=%s>" % (self.id, self.name);
+        return "<Ability id=%s, name=%s>" % (self.pk, self.name);
 
 
 class Attack(models.Model):
