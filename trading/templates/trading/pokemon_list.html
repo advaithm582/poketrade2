@@ -3,54 +3,56 @@
 {% block title %}All Pokemons{% endblock %}
 
 {% block content %}
-<h1>All Pokemons</h1>
+<h1 class="heading">All Pokemons</h1>
 <hr>
-
-{% if not pokemons %}
-<div class="message msg-info">
-    {% if query_str %}
-    There are no such Pokemon
-    {% else %}
-    There are no pokemons in this site.
-    {% endif %}
-</div>
-{% endif %}
-
-<form method="GET">
-    <input type="text" name="s" placeholder="Search..."
-        value="{{ query_str }}">
-    <input type="submit" value="Search">
-</form>
+    <div class="container">
+        <div class="row justify-content-center">
+        <div class="col-4">
+            {% if not pokemons %}
+                <div class="message msg-info">
+                    {% if query_str %}
+                        There are no such Pokemon
+                    {% else %}
+                        There are no pokemons in this site.
+                    {% endif %}
+                </div>
+            {% endif %}
+            <form method="GET">
+                <input type="text" name="s" placeholder="Search..." value="{{ query_str }}">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+        </div>
+    </div>
 
     <div class="card-deck">
         {% for pokemon in pokemons %}
         {% if pokemon.card %}
         <div class="col-sm-2 image-box">
             <img class="img-fluid" src="{{ pokemon.card.url }}" alt="Card image cap">
-            <span class="col-sm-3"><a class="pokecardview" href="{% url "trading:single_detail" pokemon.pk %}"> View </a></span>
+            <span class="row-sm-3">
+                <a class="pokecardview" href="{% url "trading:single_detail" pokemon.pk %}"> View </a>
+            </span>
+
         </div>
         {% endif %}
         {% endfor %}
     </div>
 
 
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
 
+        {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+        {% endif %}
+    </ul>
+    <em class="pagenum">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</em>
 
-<p>
-{% if page_obj.has_previous %}
-<a href="?page=1">&laquo; first</a>
-&nbsp;|&nbsp;
-<a href="?page={{ page_obj.previous_page_number }}">previous</a>
-&nbsp;|&nbsp;
-{% endif %}
-<em>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</em>
-{% if page_obj.has_next %}
-&nbsp;|&nbsp;
-<a href="?page={{ page_obj.next_page_number }}">next</a>
-&nbsp;|&nbsp;
-<a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-{% endif %}
-</p>
 
 <hr>
 {% endblock %}
