@@ -248,7 +248,7 @@ class Command(BaseCommand):
                 self.stdout.write("  * Filling AI generated flavor text")
                 while True:
                     try:
-                        pk.flavorText = self._gen_ai_prompt(pk)
+                        pk.flavorText = "\u2728 " + self._gen_ai_prompt(pk)
                     except genai.errors.ClientError:
                         if timeout == 0:
                             timeout = 10
