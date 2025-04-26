@@ -122,6 +122,7 @@ class Command(BaseCommand):
     def _add_pokemon(self, poke):
         pk = Pokemon()
         self._update_pokemon(pk, poke)
+        return pk
 
     def _update_pokemon(self, pk, poke):
         self._update_attrib_poke(pk, poke)
@@ -166,6 +167,8 @@ class Command(BaseCommand):
             pk.low_price = poke.cardmarket.prices.lowPrice
             pk.trend_price = poke.cardmarket.prices.trendPrice
             pk.suggested_price = poke.cardmarket.prices.suggestedPrice
+
+        pk.save()
 
         if poke.abilities is not None:
             for ability in poke.abilities:
@@ -239,7 +242,7 @@ class Command(BaseCommand):
                 self.stdout.write("  * Updating attributes")
                 self._update_pokemon(pk, poke)
             else:
-                self._add_pokemon(poke)
+                pk = self._add_pokemon(poke)
 
             if options["gen_ai_fill"] and not pk.flavorText:
                 self.stdout.write("  * Filling AI generated flavor text")
