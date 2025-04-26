@@ -19,7 +19,7 @@ from django.core.exceptions import PermissionDenied
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import get_object_or_404, reverse
+from django.shortcuts import get_object_or_404, reverse, redirect
 from django.contrib import messages
 from django.db.models import Q
 
@@ -94,12 +94,17 @@ class BuyPokemonView(LoginRequiredMixin, TemplateView):
         pok_obj = get_object_or_404(Pokemon, Q(pk=pok_id)
                                     & ~Q(owner=self.request.user))
         if pok_obj.trading_policy != TradingPolicy.FOR_SALE:
-            raise PermissionDenied
+            messages.error(request, "You cannot buy PokeMon not for sale!!!")
+            return redirect(reverse("trading:list"))
+
 
         # subtract its sell price to your account
         if self.request.user.coins < pok_obj.sell_price:
-            raise PermissionDenied("Not enough couns to buy Pokemon")
+            messages.error(request,
+                           "You don't have enough coins to buy PokeMon")
+            return redirect(reverse("trading:list"))
         self.request.user.coins -= pok_obj.sell_price
+
 
         # add sell price to owner (if exists)
         if pok_obj.owner:
@@ -118,6 +123,7 @@ class BuyPokemonView(LoginRequiredMixin, TemplateView):
         # save both
         self.request.user.save()
         pok_obj.save()
+        return redirect(reverse("trading:list"))
         return super().get(request, *args, **kwargs)
 
 
