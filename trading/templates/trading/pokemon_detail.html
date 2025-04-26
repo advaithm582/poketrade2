@@ -15,7 +15,6 @@
 }
 
 .card .info-section {
-    /*background-color: #4CAF50; */
     border-radius: 12px;
     padding: 20px;
     color: #fff;
@@ -40,7 +39,9 @@
     width: 200px;
     border-radius: 8px;
 }
-
+.types {
+    display: flex;
+}
 .types span {
     background-color: black;
     color: white;
@@ -48,12 +49,19 @@
     border-radius: 5px;
     margin-right: 5px;
 }
+.subtypes {
+    display: flex;
+}
 .subtypes li {
     display: inline;
     margin-right: 8px;
     background: black;
     padding: 3px 6px;
     border-radius: 5px;
+}
+.price {
+    display: flex;
+    width: 233%;
 }
 .info-label {
     font-weight: bold;
@@ -109,8 +117,7 @@
   }
 
   .card .image-right img {
-    width: 200px; 
-    max-width: 100%;
+    max-width: 80%;
     height: auto;
   }
 
@@ -169,10 +176,8 @@
                 <div class="info-label">Evolves from:</div>
                 {{ the_pokemon.evolves_from }}
             {% endif %}
+            <div class="price">Current Price: {{ the_pokemon.sell_price }} </div>
 
-            <span class="row-sm-3">
-                <a>Current Selling Price: {{ the_pokemon.sell_price }} </a>
-            </span>
 
             <br><br>
             <div class = "buttons-container">

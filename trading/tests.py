@@ -53,12 +53,12 @@ class QueryParserTest(TestCase):
 
         with self.assertRaises(ValueError) as e:
             # sorry math fans!
-            qp.parse_small_raw("year,CONTAINS,(1991%2c2004)");
+            qp.parse_small_raw("year,CONTAINS,(1991%2c2004)")
         self.assertEqual("Unsupported operation for field",
                          str(e.exception))
 
         with self.assertRaises(ValueError) as e:
-            qp.parse_small_raw("american_counterpart,EXACT,Ronald Reagan");
+            qp.parse_small_raw("american_counterpart,EXACT,Ronald Reagan")
         self.assertEqual("No such field: american_counterpart",
                          str(e.exception))
 
@@ -68,8 +68,7 @@ class QueryParserTest(TestCase):
                          str(e.exception))
 
     def test_parse(self):
-        qp = QueryParser(valid_fields={"name": str, "year": int,
-                                       "potus": str})
+        qp = QueryParser(valid_fields={"name": str, "year": int, "potus": str})
         rv = qp.parse(
                 "name,CONTAINS,ail;year,LTE,1991;@OR;potus,IDENT,"
                 "Ronald Reagan;@NOT",
