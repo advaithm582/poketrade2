@@ -33,7 +33,7 @@
                     <p>{% translate "Login to see the page" %}</p>
                 {% endif %}
             {% endif %}
-            <form method="post" action="{% url 'accounts:login' %}">
+            <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
                 <table>
                     <tr>
@@ -46,7 +46,7 @@
                     </tr>
                 </table>
                 <div class="row justify-content-center">
-                    <a href="{% url 'accounts:password_reset' %}">{% translate "Forgot Password?" %}</a>
+                    <a href="{% url 'password_reset' %}">{% translate "Forgot Password?" %}</a>
                 </div>
                 <div class="row justify-content-center">
                     <input class="login-button" type="submit" value="login">
