@@ -26,6 +26,7 @@
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                     <span class="coin_display"><img class="coins" src="{% static '/refimages/coin.png' %}">{{ user.coins }}</span>
+                    <li class="nav-item"><a type="button" class="nav-link" href="{% url "trading:list" %}">Home</a></li>
                     <li class="nav-item"><a type="button" class="nav-link" href="{% url "trading:list" %}?q=sell_price%2CGT%2C0">Market</a></li>
                     <li class="nav-item"><a type="button" class="nav-link" href="{% url "trading:user_collection" user.pk %}">Collection</a></li>
                     <li class="nav-item"><a type="button" class="nav-link" href="{% url "trading:user_wl" user.pk %}">Wishlist</a></li>
@@ -43,6 +44,7 @@
                         </a>
                     </li>
                 {% else %}
+                    <a class="nav-link" href="{% url 'accounts:signup' %}">SignUp</a>
                     <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
                 {% endif %}
             </ul>

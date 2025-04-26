@@ -27,6 +27,8 @@ from accounts.models import User
 from .models import Pokemon, TradingPolicy
 from .helpers import QueryParser, QueryableMixin
 
+from django.shortcuts import redirect
+
 
 class PokemonListView(QueryableMixin, ListView):
     """Lists all Pokemon.
@@ -139,15 +141,14 @@ class UnWishPokemonView(LoginRequiredMixin, TemplateView):
         pok_obj = get_object_or_404(Pokemon, pk=pok_id)
         pok_obj.wishers.remove(request.user)
         pok_obj.save()
-        messages.success(request, "Pokemon removed from wishlist")
-        return super().get(request, *args, **kwargs)
+        return redirect(reverse("trading:user_wl", args=[request.user.pk]))
 
 
 class WishPokemonView(LoginRequiredMixin, TemplateView):
     """Wish a pokemon if the request is POST.
     """
     http_method_names = ["post", "delete", "options"]
-    template_name = "trading/bought_pokemon.html"
+    template_name = "trading/pokemon_list.html"
 
     @method_decorator(csrf_protect)
     @method_decorator(never_cache)
@@ -161,8 +162,7 @@ class WishPokemonView(LoginRequiredMixin, TemplateView):
         pok_obj = get_object_or_404(Pokemon, pk=pok_id)
         pok_obj.wishers.add(request.user)
         pok_obj.save()
-        messages.success(request, "Pokemon added to wishlist")
-        return super().get(request, *args, **kwargs)
+        return redirect(reverse("trading:user_wl", args=[request.user.pk]))
 
     def delete(self, request, *args, **kwargs):
         pok_id = self.kwargs["pk"]
