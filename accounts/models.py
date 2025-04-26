@@ -118,7 +118,8 @@ def signal_daily_reward(sender, request, user, **kwargs):
     :type user: class`User`
     """
     if user.last_daily_reward is None \
-            or datetime.now() - user.last_daily_reward.replace(tzinfo=None) > timedelta(days=1):
+            or datetime.now() - user.last_daily_reward.replace(tzinfo=None) \
+            > timedelta(days=1):
         user.last_daily_reward = datetime.now()
         user.coins += settings.POKETRADE_DAILY_REWARD
         user.save()
