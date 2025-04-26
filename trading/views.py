@@ -95,14 +95,15 @@ class BuyPokemonView(LoginRequiredMixin, TemplateView):
                                     & ~Q(owner=self.request.user))
         if pok_obj.trading_policy != TradingPolicy.FOR_SALE:
             messages.error(request, "You cannot buy PokeMon not for sale!!!")
-            return redirect(reverse("trading:single_detail"), args=[pok_id])
+            return redirect(reverse("trading:single_detail", args=[pok_id]))
 
 
         # subtract its sell price to your account
         if self.request.user.coins < pok_obj.sell_price:
             messages.error(request,
                            "You don't have enough coins to buy PokeMon")
-            return redirect(reverse("trading:single_detail"), args=[pok_id])
+            return redirect(reverse("trading:single_detail",
+                            kwargs={"pk":pok_id}))
         self.request.user.coins -= pok_obj.sell_price
 
 
@@ -124,7 +125,7 @@ class BuyPokemonView(LoginRequiredMixin, TemplateView):
         self.request.user.save()
         pok_obj.save()
         messages.success(request, "The pokemon is now yours")
-        return redirect(reverse("trading:single_detail"), args=[pok_id])
+        return redirect(reverse("trading:single_detail", kwargs={"pk":pok_id}))
         #return super().get(request, *args, **kwargs)
 
 

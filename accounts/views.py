@@ -86,11 +86,11 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             This is the profile just edited.
         :rtype: str
         """
-        return reverse("accounts:profile", kwargs=self.kwargs)
+        return reverse("profile", kwargs=self.kwargs)
 
 
 def my_profile(request):
-    return redirect(reverse("accounts:profile", args=[request.user.pk]))
+    return redirect(reverse("profile", args=[request.user.pk]))
 
 
 def signup_v2_init(request):
@@ -106,7 +106,7 @@ def signup_v2_init(request):
                             "exp": time() + 600},
                            settings.SECRET_KEY,
                            algorithm="HS256");
-                link = request.get_host() + reverse("accounts:sverify",
+                link = request.get_host() + reverse("sverify",
                                                   kwargs=dict(token=token));
                 send_mail(
                         "[GT Movie Store] Account Registration Request",

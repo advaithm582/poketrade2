@@ -14,22 +14,22 @@
         <ul class="menu">
             {% if user.is_authenticated %}
             <li><a href="/pokemon/all">Sales</a></li>
-            <li><a href="{% url "accounts:my_profile" %}">Profile</a></li>
+            <li><a href="{% url "my_profile" %}">Profile</a></li>
             <li class="align-right">
-                <form method="post" action="{% url 'accounts:logout' %}">
+                <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
                     <button type="submit">Logout</button>
                 </form>
             </li>
             {% comment %}
             <li class="align-right">
-                <a href="{% url 'accounts.logout' %}">Logout</a>
+                <a href="{% url 'logout' %}">Logout</a>
             </li>
             {% endcomment %}
             <li class="align-right">{{ user.username }}</li>
             {% else %}
-            <li><a href="{% url 'accounts:login' %}">Login</a></li>
-            {# <li><a href="{% url 'accounts:signup' %}">Register</a></li> #}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            {# <li><a href="{% url 'signup' %}">Register</a></li> #}
             {% endif %}
         </ul>
         {% endblock %}
