@@ -360,7 +360,7 @@ class Ability(models.Model):
                 ];
 
     def __repr__(self):
-        return "<Ability id=%s, name=%s>" % (id, name);
+        return "<Ability id=%s, name=%s>" % (self.id, self.name);
 
 
 class Attack(models.Model):
