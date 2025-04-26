@@ -97,7 +97,6 @@ class Pokemon(models.Model):
     # NOTE: use the property ".types", it is a list which will
     # do the serialization for you.
     type_l = models.TextField(default="");
-    # TODO: this field does not actually exist - remove it
     # description = models.TextField(default="")
     # Some pokemon don't evolve from anything. Just like how some random
     # bacteria pop out of nowhere.
@@ -339,19 +338,8 @@ class Pokemon(models.Model):
         else:
             return TradingPolicy.RESERVED_FOR_NEW_USERS
 
-    @classmethod
-    def get_random_pokemon(self):
-        """Get a random pokemon from the TCG API that is not already
-        present.
-
-        :returns: A Pokemon object randomly selected from the TCG API
-        :rtype: class`store.Pokemon`
-        """
-        # TODO: implement
-        ...
-
     def __repr__(self):
-        return "<Pokemon id=%s, name=%s>" % (id, name);
+        return "<Pokemon id=%s, name=%s>" % (self.id, self.name);
 
 
 class Ability(models.Model):
