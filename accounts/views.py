@@ -109,7 +109,7 @@ def signup_v2_init(request):
                 link = request.get_host() + reverse("sverify",
                                                   kwargs=dict(token=token))
                 send_mail(
-                        "[GT Movie Store] Account Registration Request",
+                        "[PokeTrade] Account Registration Request",
                         render_to_string("accounts/signup_v2_init.txt",
                              dict(email=form.cleaned_data["email"],
                                   link=link)),

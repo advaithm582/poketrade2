@@ -138,6 +138,9 @@ body {
     background-color: #FFCC03;
     border-color: #c3e6cb;
 }
+.alert-success {
+    font-weight: bold;
+}
 
 .entries {
     color: #FFF;
