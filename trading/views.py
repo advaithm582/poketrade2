@@ -146,6 +146,7 @@ class UnWishPokemonView(LoginRequiredMixin, TemplateView):
         pok_obj = get_object_or_404(Pokemon, pk=pok_id)
         pok_obj.wishers.remove(request.user)
         pok_obj.save()
+        messages.success(request, "Pokemon removed from wishlist")
         return redirect(reverse("trading:user_wl", args=[request.user.pk]))
 
 
@@ -167,6 +168,7 @@ class WishPokemonView(LoginRequiredMixin, TemplateView):
         pok_obj = get_object_or_404(Pokemon, pk=pok_id)
         pok_obj.wishers.add(request.user)
         pok_obj.save()
+        messages.success(request, "Pokemon added to wishlist")
         return redirect(reverse("trading:user_wl", args=[request.user.pk]))
 
     def delete(self, request, *args, **kwargs):

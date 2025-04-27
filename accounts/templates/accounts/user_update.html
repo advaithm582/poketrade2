@@ -3,40 +3,54 @@
 {% block title %}Edit Profile{% endblock %}
 
 {% block content %}
+    <style>
+    .entries {
+        font-size: 35px;
+    }
+    .editprofform {
+        border: none;
+        margin-bottom: 15px;
+        max-width: 100%;
+    }
+    .editproflabel {
+        min-width: 22%;
+        text-align: left;
+    }
+    </style>
 <div class="container-fluid">
     <div class="d-flex justify-content-center">
         <div class="p-2 profhead">Edit Profile</div>
     </div>
-    <div class="d-flex justify-content-center">
+
         <form method="post">
             {% csrf_token %}
             {{ form.non_field_errors }}
-            <div class="p-2 entries">
+            <div class="row entries justify-content-center">
                 {{ form.username.errors }}
-                <label for="{{ form.username.id_for_label }}">Username: </label>
-                {{ form.username }}
+                <label class="editproflabel" for="{{ form.username.id_for_label }}">Username: </label>
+                <input class="editprofform" type="text" name="username" value="{{ user.username }}" maxlength="150" required="" aria-describedby="id_username_helptext" id="id_username">
             </div>
-            <div class="p-2 entries">
+            <div class="row entries justify-content-center">
                 {{ form.first_name.errors }}
-                <label for="{{ form.first_name.id_for_label }}">First Name: </label>
-                {{ form.first_name }}
+                <label class="editproflabel" for="{{ form.first_name.id_for_label }}">First Name: </label>
+                <input class="editprofform" type="text" name="first_name" value="{{ user.first_name }}" maxlength="150" id="id_first_name">
             </div>
-            <div class="p-2 entries">
+            <div class="row entries justify-content-center">
                 {{ form.last_name.errors }}
-                <label for="{{ form.last_name.id_for_label }}">Last Name: </label>
-                {{ form.last_name }}
+                <label class="editproflabel" for="{{ form.last_name.id_for_label }}">Last Name: </label>
+                <input class="editprofform" type="text" name="last_name" value="{{ user.last_name }}" maxlength="150" id="id_last_name">
             </div>
-            <div class="p-2 entries">
+            <div class="row entries justify-content-center">
                 {{ form.email.errors }}
-                <label for="{{ form.email.id_for_label }}">Email address: </label>
-                {{ form.email }}
+                <label class="editproflabel" for="{{ form.email.id_for_label }}">Email address: </label>
+                <input class="editprofform" type="email" name="email" value="{{ user.email }}" maxlength="254" id="id_email">
             </div>
             <div class="d-flex justify-content-center">
                     <input class="edit_prof_btn" type="submit" value="Update">
             </div>
 
         </form>
-    </div>
+
 </div>
 
 {% endblock %}

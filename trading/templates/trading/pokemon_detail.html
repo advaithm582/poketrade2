@@ -176,7 +176,13 @@
                 <div class="info-label">Evolves from:</div>
                 {{ the_pokemon.evolves_from }}
             {% endif %}
-            <div class="price">Current Price: {{ the_pokemon.sell_price }} </div>
+            {% if the_pokemon.sell_price %}
+                <div class="price">Current Price: {{ the_pokemon.sell_price }} </div>
+            {% endif %}
+
+            {% if the_pokemon.owner.username %}
+                <div class="price">Current Owner: {{ the_pokemon.owner.username }} </div>
+            {% endif %}
 
             <br><br>
             <div class = "buttons-container">

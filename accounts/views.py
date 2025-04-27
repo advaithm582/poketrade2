@@ -94,9 +94,9 @@ def my_profile(request):
 
 
 def signup_v2_init(request):
-    form = UserRegistrationRequestForm();
+    form = UserRegistrationRequestForm()
     if request.method == "POST":
-        form = UserRegistrationRequestForm(request.POST);
+        form = UserRegistrationRequestForm(request.POST)
         if form.is_valid():
             if not User.objects.filter(email=form.cleaned_data["email"])\
                     .exists():
@@ -105,9 +105,9 @@ def signup_v2_init(request):
                             "last": form.cleaned_data["last_name"],
                             "exp": time() + 600},
                            settings.SECRET_KEY,
-                           algorithm="HS256");
+                           algorithm="HS256")
                 link = request.get_host() + reverse("sverify",
-                                                  kwargs=dict(token=token));
+                                                  kwargs=dict(token=token))
                 send_mail(
                         "[GT Movie Store] Account Registration Request",
                         render_to_string("accounts/signup_v2_init.txt",
@@ -116,17 +116,17 @@ def signup_v2_init(request):
                              settings.SERVER_EMAIL,
                              [form.cleaned_data["email"]],
                              fail_silently=False
-                         );
-            messages.success(request, "Check your email inbox");
-            return redirect(reverse("trading:list"));
+                         )
+            messages.success(request, "Check your email inbox")
+            return redirect(reverse("trading:list"))
     return render(request, "accounts/signup_v2_init.html",
-              dict(form=form));
+              dict(form=form))
 
 
 def signup_v2_verify(request, token):
     try:
         token = jwt.decode(token, settings.SECRET_KEY,
-                           algorithms=["HS256"]);
+                           algorithms=["HS256"])
         if request.method == "GET":
             if User.objects.filter(email=token["email"]).exists():
                 raise RuntimeError("User exists")
@@ -138,13 +138,13 @@ def signup_v2_verify(request, token):
             form = UserCreationForm(request.POST)
             if form.is_valid():
                 user = form.save()
-                user.email = token["email"];
-                user.first_name = token["first"];
-                user.last_name = token["last"];
-                assign_pokemon_to_user(user);
-                user.save();
-                messages.success(request, "user created login now to get $$$");
-                return redirect(reverse("trading:list"));
+                user.email = token["email"]
+                user.first_name = token["first"]
+                user.last_name = token["last"]
+                assign_pokemon_to_user(user)
+                user.save()
+                messages.success(request, "user created login now to get $$$")
+                return redirect(reverse("trading:list"))
             else:
                 form = form
                 return render(request, "accounts/signup_v2_verify.html",
@@ -152,6 +152,6 @@ def signup_v2_verify(request, token):
                                    exp=datetime.fromtimestamp(token["exp"])))
     except Exception as e:
         print(e)
-        messages.error(request, "Link expired or user exists");
-        return redirect(reverse("trading:list"));
+        messages.error(request, "Link expired or user exists")
+        return redirect(reverse("trading:list"))
 
