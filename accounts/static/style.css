@@ -132,6 +132,13 @@ body {
     line-height: normal;
 }
 
+.alert-error {
+    color: red;
+    font-weight: bold;
+    background-color: #FFCC03;
+    border-color: #c3e6cb;
+}
+
 .entries {
     color: #FFF;
     text-align: center;
