@@ -50,7 +50,7 @@ class User(AbstractUser):
     last_daily_reward = models.DateTimeField(null=True, blank=True)
 
 
-    def gravatar(self, size=40, *, fallback="wavatar",
+    def gravatar(self, size=40, *, fallback="retro",
                  default="{username}@example.org"):
         """Get the User's Gravatar.
 
@@ -105,6 +105,14 @@ class User(AbstractUser):
         """
         return self.gravatar(128);
 
+    @property
+    def gravatar_1024(self):
+        """Gravatar as a property for Django Templates.
+
+        :return: A Gravatar URL of size 1024.
+        :rtype: str
+        """
+        return self.gravatar(1024);
 
 # Signals
 
