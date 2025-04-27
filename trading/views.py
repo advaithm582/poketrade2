@@ -194,9 +194,7 @@ class UpdateSellPriceView(LoginRequiredMixin, UpdateView):
         pokemon
         """
         obj = super().get_object(*args, **kw)
-        if obj.owner != self.request.user:
-            # malicious user
-            raise PermissionDenied
+
         return obj
 
     def get_success_url(self):
@@ -208,6 +206,13 @@ class UpdateSellPriceView(LoginRequiredMixin, UpdateView):
         """
         messages.success(self.request, "Updated sale price!")
         return reverse("trading:single_detail", args=[self.object.pk])
+
+    def get_context_data(self, **kwargs):
+        # to modify message on search
+        ctx = super().get_context_data(**kwargs)
+        ctx["in_wishlist"] = \
+            self.get_object().wishers.filter(pk=self.request.user.pk).exists()
+        return ctx
 
 
 class PokemonDetailView(DetailView):

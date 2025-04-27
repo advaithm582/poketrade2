@@ -3,27 +3,99 @@
 {% block title %}All Pokemons{% endblock %}
 
 {% block content %}
+    <style>
+    .search-2 {
+        position: relative;
+        width: 100%;
+
+    }
+
+    .search-2 input {
+        height: 45px;
+        border: none;
+        padding-right: 100px;
+        border-radius: 10px;
+    }
+
+    .search-2 input:focus {
+        border-color: none;
+        box-shadow: none;
+        outline: none;
+    }
+
+    .search-2 i {
+        position: absolute;
+        top: 12px;
+        left: -10px;
+        font-size: 24px;
+        color: #eee;
+    }
+
+    .search-2 button {
+        position: absolute;
+        right: 3px;
+        top: 5px;
+        border: none;
+        height: 35px;
+        background-color: yellowgreen;
+        color: black;
+        width: 90px;
+        border-radius: 10px
+    }
+
+    @media (max-width:800px) {
+    .search-1 input {
+        border-right: none;
+        border-bottom: 1px solid #eee;
+    }
+
+    .search-2 i {
+        left: 4px;
+    }
+
+    .search-2 input {
+        padding-left: 34px;
+    }
+
+    .search-2 button {
+        height: 35px;
+        top: 5px;
+    }
+    }
+
+    .navbar-collapse {
+        max-width: 50%;
+    }
+
+    </style>
 <h1 class="heading">All Pokemons</h1>
 <hr>
-    <div class="container justify-content-center">
+    <div class="container">
+        {% if not pokemons %}
+            <div class="message msg-info">
+                {% if query_str %}
+                    There are no such Pokemon
+                {% else %}
+                    There are no pokemons in this site.
+                {% endif %}
+            </div>
+        {% endif %}
         <div class="row justify-content-center">
-        <div class="col-4">
-            {% if not pokemons %}
-                <div class="message msg-info">
-                    {% if query_str %}
-                        There are no such Pokemon
-                    {% else %}
-                        There are no pokemons in this site.
-                    {% endif %}
+            <div class="">
+                <div class="row">
+                    <form class="search-2" method="GET">
+                        <input type="text" name="s" placeholder="Search..." >
+                        <button type="submit" >Search</button>
+                    </form>
                 </div>
-            {% endif %}
-            <form method="GET" class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-4 gap-2">
-                <input type="text" name="s" class="form-control" placeholder="Search eg. ditto or pikachu...">
-                <button type="submit" class="btn btn-danger text-white"> Search </button>
-            </form>
+            </div>
         </div>
-        </div>
+
+
+
     </div>
+
+
     <div class="card-deck">
         {% for pokemon in pokemons %}
         {% if pokemon.card %}
