@@ -44,33 +44,43 @@
     }
 
     @media (max-width:800px) {
-    .search-1 input {
-        border-right: none;
-        border-bottom: 1px solid #eee;
+        .search-1 input {
+            border-right: none;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-2 i {
+            left: 4px;
+        }
+
+        .search-2 input {
+            padding-left: 34px;
+        }
+
+        .search-2 button {
+            height: 35px;
+            top: 5px;
+        }
+
+        .navbar-collapse {
+            max-width: 80%;
+        }
+
+        .navbar_image {
+            height: 15%;
+            width: 15%;
+        }
     }
 
-    .search-2 i {
-        left: 4px;
-    }
 
-    .search-2 input {
-        padding-left: 34px;
-    }
 
-    .search-2 button {
-        height: 35px;
-        top: 5px;
-    }
-    }
-
-    .navbar-collapse {
-        max-width: 50%;
-    }
 
     </style>
-<h1 class="heading">All Pokemons</h1>
-<hr>
-    <div class="container">
+    <div class="container-fluid">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <h1 class="heading">All Pokemons</h1>
+        </div>
         {% if not pokemons %}
             <div class="alert alert-info">
                 {% if query_str %}
@@ -90,21 +100,22 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="card-deck">
-        {% for pokemon in pokemons %}
-        {% if pokemon.card %}
-        <div class="col-sm-2 image-box">
-            <img class="img-fluid" src="{{ pokemon.card.url }}" alt="Card image cap">
-            <span class="row-sm-3">
-                <a class="pokecardview" href="{% url "trading:single_detail" pokemon.pk %}"> View </a>
+        <div class="card-deck">
+            {% for pokemon in pokemons %}
+                {% if pokemon.card %}
+                    <div class="col-sm-2 image-box">
+                        <img class="img-fluid" src="{{ pokemon.card.url }}" alt="Card image cap">
+                        <span class="row-sm-3">
+                            <a class="pokecardview" href="{% url "trading:single_detail" pokemon.pk %}"> View </a>
 
-            </span>
+                        </span>
 
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
-        {% endif %}
-        {% endfor %}
     </div>
+
 
 
     <ul class="pagination justify-content-center">
@@ -119,8 +130,7 @@
         {% endif %}
     </ul>
     <em class="pagenum">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</em>
+    </div>
 
-
-<hr>
 {% endblock %}
 

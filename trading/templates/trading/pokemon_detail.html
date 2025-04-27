@@ -10,6 +10,7 @@
     padding: 20px;
     color: white;
     font-family: "Kumbh Sans";
+    font-size: 20px;
     max-width: 800px;
     margin: auto;
 }
@@ -39,9 +40,11 @@
     width: 200px;
     border-radius: 8px;
 }
+
 .types {
     display: flex;
 }
+
 .types span {
     background-color: black;
     color: white;
@@ -52,6 +55,7 @@
 .subtypes {
     display: flex;
 }
+
 .subtypes li {
     display: inline;
     margin-right: 8px;
@@ -61,13 +65,19 @@
 }
 .price {
     display: flex;
-    width: 233%;
+    min-width: 40%;
 }
+
+.nametag {
+    margin-left: 5px;
+}
+
 .info-label {
     font-weight: bold;
     margin-top: 10px;
     display: inline-block;
 }
+
 .buy-button {
     background-color: #00e676;
     border: none;
@@ -78,6 +88,7 @@
     margin-top: 20px;
     cursor: pointer;
 }
+
 .sell-button {
     background-color: darkred;
     border: none;
@@ -103,7 +114,7 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
-    flex-wrap: nowrap; 
+    flex-wrap: wrap-reverse;
   }
 
   .card .info-text {
@@ -136,10 +147,9 @@
 </style>
 
 <div class="card">
+<h2>{{ the_pokemon.name }}</h2>
     <div class="info-section">
         <div class="info-text">
-            <h2>{{ the_pokemon.name }}</h2>
-
             {% if the_pokemon.supertype %}
                 <div class="info-label">Supertype:</div> {{ the_pokemon.supertype }}<br>
             {% endif %}
@@ -181,42 +191,50 @@
             {% endif %}
 
             {% if the_pokemon.owner.username %}
-                <div class="price">Current Owner: {{ the_pokemon.owner.username }} </div>
-            {% endif %}
+                <div class="price">
+                    Current Owner:
+                    <a class="nametag" href="{% url 'profile' the_pokemon.owner.pk %}"> {{ the_pokemon.owner.username }}</a>
+                </div>
 
-            <br><br>
-            <div class = "buttons-container">
-                {% if the_pokemon.owner == user %}
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button class="sell-button" type="submit">Update Price</button>
-                    </form>
-                {% else %}
-                    {% if the_pokemon.sell_price %}
-                        <form method="post" action="{% url "trading:buy_single" the_pokemon.pk %}">
-                            {% csrf_token %}
-                            <div class="row justify-content-center">
-                                <button class="buy-button" type="submit">Buy</button>
-                            </div>
-                        </form>
-                    {% endif %}
-                    {% if in_wishlist %}
-                        <form method="post" action="{% url "trading:unwish" the_pokemon.pk %}">
-                            {% csrf_token %}
-                            <button class="sell-button" type="submit">Remove from Wishlist</button>
-                        </form>
-                    {% else %}
-                        <form method="post" action="{% url "trading:wish" the_pokemon.pk %}">
-                            {% csrf_token %}
-                            <button class="buy-button" type="submit">Add to wishlist</button>
-                        </form>
-                    {% endif %}
-                {% endif %}
-            </div>
+            {% endif %}
         </div>
+            <br><br>
+
         <div class="image-right">
             <img src="{{ the_pokemon.card.url }}" alt="{{ the_pokemon.name }}">
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class = "buttons-container">
+            {% if the_pokemon.owner == user %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="row justify-content-center">
+                        <button class="sell-button" type="submit">Update Price</button>
+                    </div>
+                </form>
+            {% else %}
+                {% if the_pokemon.sell_price %}
+                    <form method="post" action="{% url "trading:buy_single" the_pokemon.pk %}">
+                        {% csrf_token %}
+                        <div class="row justify-content-center">
+                            <button class="buy-button" type="submit">Buy</button>
+                        </div>
+                    </form>
+                {% endif %}
+                {% if in_wishlist %}
+                    <form method="post" action="{% url "trading:unwish" the_pokemon.pk %}">
+                        {% csrf_token %}
+                        <button class="sell-button" type="submit">Remove from Wishlist</button>
+                    </form>
+                {% else %}
+                    <form method="post" action="{% url "trading:wish" the_pokemon.pk %}">
+                        {% csrf_token %}
+                        <button class="buy-button" type="submit">Add to wishlist</button>
+                    </form>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 </div>

@@ -2,34 +2,103 @@
 {% block title %}{{ the_user.username }}'s profile{% endblock %}
 
 {% block content %}
-<div class="container-fluid justify-content-center">
-    <div class="d-flex justify-content-center">
-        <div class="p-2 profhead">Profile</div>
-    </div>
-    <div class="d-flex justify-content-center">
+    <style>
+        .card {
+            background-color: transparent;
+            padding: 20px;
+            color: white;
+            font-family: "Kumbh Sans";
+            font-size: 20px;
+            max-width: 800px;
+            margin: auto;
+            border: transparent;
+        }
 
-        <div class="col-5">
-            <img class="profpic" src="{{ the_user.gravatar_1024 }}" alt="">
+        .card .info-section {
+            padding: 20px;
+            color: #fff;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .card .info-text {
+            margin-left: 10px;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .card .image-right {
+            flex-shrink: 0;
+            align-self: flex-start;
+        }
+
+        .card .image-right img {
+            border-radius: 8px;
+        }
+
+    @media (max-width: 800px) {
+        .card .info-section {
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .card .info-text {
+            flex: 1 1 60%;
+            min-width: 0;
+        }
+
+        .card .image-right {
+            flex: 0 0 auto;
+            align-self: flex-start;
+            max-width: 280px;
+        }
+
+        .card .image-right img {
+            max-width: 80%;
+            height: auto;
+        }
+
+        .entries {
+            justify-content: center;
+            margin: 0px;
+        }
+    }
+    </style>
+    <div class="d-flex justify-content-center">
+            <div class="p-2 profhead">Profile</div>
         </div>
-        <div class="col-7">
-            <div class="row entries">Username: {{ the_user.username }}</div>
-            {% if the_user.first_name %}
-                <div class="row entries">First Name: {{ the_user.first_name }}</div>
-            {% endif %}
-            {% if the_user.last_name %}
-                <div class="row entries">Last Name: {{ the_user.last_name }}</div>
-            {% endif %}
-            <div class="row entries">Coins: {{ the_user.coins }}</div>
-            <div class="row entries">Streak: {{ the_user.streak }}</div>
+    <div class="card">
 
+        <div class="info-section">
+            <div class="image-right">
+                <div class="row justify-content-center">
+                    <img class="profpic" src="{{ the_user.gravatar_1024 }}" alt="">
+                </div>
+            </div>
+            <div class="info-text">
+                <div class="row entries">Username: {{ the_user.username }}</div>
+                {% if the_user.first_name %}
+                    <div class="row entries">First Name: {{ the_user.first_name }}</div>
+                {% endif %}
+                {% if the_user.last_name %}
+                    <div class="row entries">Last Name: {{ the_user.last_name }}</div>
+                {% endif %}
+                <div class="row entries">Coins: {{ the_user.coins }}</div>
+                <div class="row entries">Streak: {{ the_user.streak }}</div>
+            </div>
+        </div>
+        {% if the_user == user %}
+            <div class="d-flex justify-content-center">
+                <a href="{% url 'edit_profile' user.pk %}">
+                    <button class="edit_prof_btn" >Edit Profile</button>
+                </a>
+            </div>
+        {% endif %}
     </div>
-    </div>
-
-    <div class="d-flex justify-content-center">
-        <a href="{% url 'edit_profile' user.pk %}">
-            <button class="edit_prof_btn" >Edit Profile</button>
-        </a>
-    </div>
-</div>
 {% endblock %}
 
