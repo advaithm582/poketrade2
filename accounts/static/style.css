@@ -167,7 +167,6 @@ body {
 }
 
 .profpic {
-<<<<<<< Updated upstream
     width: 80%;
 }
 
@@ -180,9 +179,6 @@ body {
             height: 15%;
             width: 15%;
         }
-    }
-=======
-    width: 140%;
 }
 
 /* Back button specific css elements below this */
@@ -211,4 +207,3 @@ body {
     width: 24px;
     height: 24px;
 }
->>>>>>> Stashed changes
