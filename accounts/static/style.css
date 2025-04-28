@@ -171,14 +171,14 @@ body {
 }
 
 @media (max-width:800px) {
-        .navbar-collapse {
-            max-width: 80%;
-        }
+    .navbar-collapse {
+        max-width: 80%;
+    }
 
-        .navbar_image {
-            height: 15%;
-            width: 15%;
-        }
+    .navbar_image {
+        height: 15%;
+        width: 15%;
+    }
 }
 
 /* Back button specific css elements below this */
