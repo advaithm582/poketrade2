@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+    <style>
+    .row {
+        color: black;
+    }
+
+    .heading {
+        color: black;
+    }
+
+    .login-button {
+        background-color: blue;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    </style>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow p-3 mb-4 rounded">
+                <div class="card-body">
+                    <h2 class="heading">{% translate "Sign Up: Final Step" %}</h2>
+                    <hr />
+                    <div class="alert alert-warning">
+                        You have until {{ exp|date:"m/d/Y H:i:s" }} to finish
+                        your registration.
+                    </div>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="row justify-content-center">
+                            <input class="login-button" type="submit" value="Sign Up">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

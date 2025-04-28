@@ -97,7 +97,6 @@ class Pokemon(models.Model):
     # NOTE: use the property ".types", it is a list which will
     # do the serialization for you.
     type_l = models.TextField(default="");
-    # TODO: this field does not actually exist - remove it
     # description = models.TextField(default="")
     # Some pokemon don't evolve from anything. Just like how some random
     # bacteria pop out of nowhere.
@@ -196,6 +195,9 @@ class Pokemon(models.Model):
     owner = models.ForeignKey(User, on_delete=models.SET_NULL,
                               null=True, blank=True,
                               related_name="pokemons")
+
+    wishers = models.ManyToManyField(User,
+                                     related_name="wishlist")
 
     def __str__(self):
         return self.name
@@ -336,19 +338,8 @@ class Pokemon(models.Model):
         else:
             return TradingPolicy.RESERVED_FOR_NEW_USERS
 
-    @classmethod
-    def get_random_pokemon(self):
-        """Get a random pokemon from the TCG API that is not already
-        present.
-
-        :returns: A Pokemon object randomly selected from the TCG API
-        :rtype: class`store.Pokemon`
-        """
-        # TODO: implement
-        ...
-
     def __repr__(self):
-        return "<Pokemon id=%s, name=%s>" % (id, name)
+        return "<Pokemon id=%s, name=%s>" % (self.pk, self.name);
 
 
 class Ability(models.Model):
@@ -367,6 +358,9 @@ class Ability(models.Model):
         indexes = [
                 models.Index(fields=["name"], name="ix_ability_name"),
                 ];
+
+    def __repr__(self):
+        return "<Ability id=%s, name=%s>" % (self.pk, self.name);
 
 
 class Attack(models.Model):

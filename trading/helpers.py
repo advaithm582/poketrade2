@@ -171,7 +171,7 @@ class QueryableMixin(object):
 
     def get_context_data(self, **kwargs):
         # to modify message on search
-        ctx = super().get_context_data(**kwargs)
+        ctx = ListView.get_context_data(self, **kwargs)
         ctx["query_str"] = self._get_userquery() or "";
         return ctx
 
@@ -188,7 +188,7 @@ def assign_pokemon_to_user(user):
     :param user: The user to assign Pokemon to.
     :type user: class`accounts.User`
     """
-    # TODO
+
     for o in Pokemon.objects.filter(owner__isnull=True, sell_price__lte=0)\
             .order_by("?")[:10]:
         o.owner = user

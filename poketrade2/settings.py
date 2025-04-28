@@ -136,3 +136,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Media root is in pictures folder
 MEDIA_ROOT = os.path.expanduser("~/Pictures/poketrade2")
 MEDIA_URL = "/user_uploads/"
+
+
+# Where Flask Flash
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
+
+
+# TODO: remove in prod
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# Poketrade Settings
+POKETRADE_DAILY_REWARD = 100

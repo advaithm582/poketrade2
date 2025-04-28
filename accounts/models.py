@@ -23,10 +23,14 @@ __all__ = ["User"]
 __author__ = "Advaith Menon"
 
 import hashlib
+from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.signals import user_logged_in
+from django.conf import settings
 from django.db import models
+from django.contrib import messages
 
 
 class User(AbstractUser):
@@ -42,7 +46,11 @@ class User(AbstractUser):
     # The user's streak
     streak = models.IntegerField(default=0)
 
-    def gravatar(self, size=40, *, fallback="wavatar",
+    # The last time the user got a daily reward
+    last_daily_reward = models.DateTimeField(null=True, blank=True)
+
+
+    def gravatar(self, size=40, *, fallback="retro",
                  default="{username}@example.org"):
         """Get the User's Gravatar.
 
@@ -87,4 +95,47 @@ class User(AbstractUser):
         :rtype: str
         """
         return self.gravatar(64);
+
+    @property
+    def gravatar_128(self):
+        """Gravatar as a property for Django Templates.
+
+        :return: A Gravatar URL of size 128.
+        :rtype: str
+        """
+        return self.gravatar(128);
+
+    @property
+    def gravatar_1024(self):
+        """Gravatar as a property for Django Templates.
+
+        :return: A Gravatar URL of size 1024.
+        :rtype: str
+        """
+        return self.gravatar(1024);
+
+# Signals
+
+def signal_daily_reward(sender, request, user, **kwargs):
+    """Signal for daily reward.
+
+    :param sender: The class of the User object.
+    :type sender: class`type`
+    :param request: The HTTPRequest of the login object.
+    :param user: The user who just logged in
+    :type user: class`User`
+    """
+    if user.last_daily_reward is None \
+            or datetime.now() - user.last_daily_reward.replace(tzinfo=None) \
+            > timedelta(days=1):
+        user.last_daily_reward = datetime.now()
+        user.coins += settings.POKETRADE_DAILY_REWARD
+        user.save()
+        messages.info(request,
+                      "You have received a daily reward of %d coins" % (
+                          settings.POKETRADE_DAILY_REWARD))
+
+
+user_logged_in.connect(signal_daily_reward)
+
 

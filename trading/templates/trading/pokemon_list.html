@@ -3,55 +3,142 @@
 {% block title %}All Pokemons{% endblock %}
 
 {% block content %}
-<h1>All Pokemons</h1>
-<hr>
+    <style>
+    .search-2 {
+        position: relative;
+        width: 100%;
 
-{% if not pokemons %}
-<div class="message msg-info">
-    {% if query_str %}
-    There are no such Pokemon
-    {% else %}
-    There are no pokemons in this site.
-    {% endif %}
-</div>
-{% endif %}
+    }
 
-<form method="GET">
-    <input type="text" name="s" placeholder="Search..."
-        value="{{ query_str }}">
-    <input type="submit" value="Search">
-</form>
+    .search-2 input {
+        height: 45px;
+        border: none;
+        padding-right: 100px;
+        border-radius: 10px;
+    }
 
-    <div class="card-deck">
-        {% for pokemon in pokemons %}
-        {% if pokemon.card %}
-        <div class="col-sm-3 ">
-            <img class="img-fluid margin:5px" src="{{ pokemon.card.url }}" alt="Card image cap">
-            <span><a href="{% url "trading:single_detail" pokemon.pk %}">view</a></span>
+    .search-2 input:focus {
+        border-color: none;
+        box-shadow: none;
+        outline: none;
+    }
+
+    .search-2 i {
+        position: absolute;
+        top: 12px;
+        left: -10px;
+        font-size: 24px;
+        color: #eee;
+    }
+
+    .search-2 button {
+        position: absolute;
+        right: 3px;
+        top: 5px;
+        border: none;
+        height: 35px;
+        background-color: yellowgreen;
+        color: black;
+        width: 90px;
+        border-radius: 10px
+    }
+
+    @media (max-width:800px) {
+        .search-1 input {
+            border-right: none;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-2 i {
+            left: 4px;
+        }
+
+        .search-2 input {
+            padding-left: 34px;
+        }
+
+        .search-2 button {
+            height: 35px;
+            top: 5px;
+        }
+
+        .navbar-collapse {
+            max-width: 80%;
+        }
+
+        .navbar_image {
+            height: 15%;
+            width: 15%;
+        }
+
+        .image-box {
+            padding: 0px !important;
+            border-radius: 9px;
+            box-shadow: 0px 5px 16.2px -2px black;
+            margin: 6px 15px 7px 0px;
+            background-color: #F5F5D6;
+        }
+    }
+
+
+
+
+    </style>
+    <div class="container-fluid">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <h1 class="heading">All Pokemons</h1>
         </div>
+        {% if not pokemons %}
+            <div class="alert alert-info">
+                {% if query_str %}
+                    There are no such Pokemon
+                {% else %}
+                    There are no pokemons in this site.
+                {% endif %}
+            </div>
         {% endif %}
-        {% endfor %}
+        <div class="row justify-content-center">
+            <div class="">
+                <div class="row">
+                    <form class="search-2" method="GET">
+                        <input type="text" name="s" placeholder="Search..." >
+                        <button type="submit" >Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-deck">
+            {% for pokemon in pokemons %}
+                {% if pokemon.card %}
+                    <div class="col-sm-2 image-box">
+                        <img class="img-fluid" src="{{ pokemon.card.url }}" alt="Card image cap">
+                        <span class="row-sm-3">
+                            <a class="pokecardview" href="{% url "trading:single_detail" pokemon.pk %}"> View </a>
+
+                        </span>
+
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
 
 
 
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
 
-<p>
-{% if page_obj.has_previous %}
-<a href="?page=1">&laquo; first</a>
-&nbsp;|&nbsp;
-<a href="?page={{ page_obj.previous_page_number }}">previous</a>
-&nbsp;|&nbsp;
-{% endif %}
-<em>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</em>
-{% if page_obj.has_next %}
-&nbsp;|&nbsp;
-<a href="?page={{ page_obj.next_page_number }}">next</a>
-&nbsp;|&nbsp;
-<a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-{% endif %}
-</p>
+        {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+        {% endif %}
+    </ul>
+    <em class="pagenum">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</em>
+    </div>
 
-<hr>
 {% endblock %}
 

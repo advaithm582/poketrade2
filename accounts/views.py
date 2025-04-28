@@ -4,19 +4,31 @@ Contains signup pages and the profile page.
 """
 
 __all__ = ["ProfileView", "ProfileUpdateView", "MyPokemonsListView",
-           "my_profile"]
+           "my_profile", "signup_v2_init",
+           "signup_v2_verify",]
 
 __author__ = "Advaith Menon"
+
+from time import time
+from datetime import datetime
 
 from django.views.generic.detail import DetailView
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect, reverse, render
+from django.contrib import messages
 from django.views.generic.edit import UpdateView
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+import jwt
 
 from .models import User
+from .forms import UserRegistrationRequestForm, \
+        UserCreationForm
 from trading.models import Pokemon
+from trading.helpers import assign_pokemon_to_user
 
 
 class MyPokemonsListView(LoginRequiredMixin, ListView):
@@ -74,8 +86,72 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             This is the profile just edited.
         :rtype: str
         """
-        return reverse("accounts:profile", kwargs=self.kwargs)
+        return reverse("profile", kwargs=self.kwargs)
 
 
 def my_profile(request):
-    return redirect(reverse("accounts:profile", args=[request.user.pk]))
+    return redirect(reverse("profile", args=[request.user.pk]))
+
+
+def signup_v2_init(request):
+    form = UserRegistrationRequestForm()
+    if request.method == "POST":
+        form = UserRegistrationRequestForm(request.POST)
+        if form.is_valid():
+            if not User.objects.filter(email=form.cleaned_data["email"])\
+                    .exists():
+                token = jwt.encode({"email": form.cleaned_data["email"],
+                            "first": form.cleaned_data["first_name"],
+                            "last": form.cleaned_data["last_name"],
+                            "exp": time() + 600},
+                           settings.SECRET_KEY,
+                           algorithm="HS256")
+                link = request.get_host() + reverse("sverify",
+                                                  kwargs=dict(token=token))
+                send_mail(
+                        "[PokeTrade] Account Registration Request",
+                        render_to_string("accounts/signup_v2_init.txt",
+                             dict(email=form.cleaned_data["email"],
+                                  link=link)),
+                             settings.SERVER_EMAIL,
+                             [form.cleaned_data["email"]],
+                             fail_silently=False
+                         )
+            messages.success(request, "Check your email inbox")
+            return redirect(reverse("trading:list"))
+    return render(request, "accounts/signup_v2_init.html",
+              dict(form=form))
+
+
+def signup_v2_verify(request, token):
+    try:
+        token = jwt.decode(token, settings.SECRET_KEY,
+                           algorithms=["HS256"])
+        if request.method == "GET":
+            if User.objects.filter(email=token["email"]).exists():
+                raise RuntimeError("User exists")
+            form = UserCreationForm()
+            return render(request, "accounts/signup_v2_verify.html",
+                          dict(form=form,
+                               exp=datetime.fromtimestamp(token["exp"])))
+        elif request.method == "POST":
+            form = UserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                user.email = token["email"]
+                user.first_name = token["first"]
+                user.last_name = token["last"]
+                assign_pokemon_to_user(user)
+                user.save()
+                messages.success(request, "user created login now to get $$$")
+                return redirect(reverse("trading:list"))
+            else:
+                form = form
+                return render(request, "accounts/signup_v2_verify.html",
+                              dict(form=form,
+                                   exp=datetime.fromtimestamp(token["exp"])))
+    except Exception as e:
+        print(e)
+        messages.error(request, "Link expired or user exists")
+        return redirect(reverse("trading:list"))
+
