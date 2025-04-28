@@ -188,7 +188,7 @@ def assign_pokemon_to_user(user):
     :param user: The user to assign Pokemon to.
     :type user: class`accounts.User`
     """
-    # TODO
+
     for o in Pokemon.objects.filter(owner__isnull=True, sell_price__lte=0)\
             .order_by("?")[:10]:
         o.owner = user

@@ -161,7 +161,7 @@ class Command(BaseCommand):
             pk.flavorText = poke.flavorText or ""
         if poke.nationalPokedexNumbers:
             pk.national_pokedex_numbers = poke.nationalPokedexNumbers
-        # TODO: add rarity
+
         if poke.cardmarket and poke.cardmarket.prices:
             pk.average_sell_price = poke.cardmarket.prices.averageSellPrice
             pk.low_price = poke.cardmarket.prices.lowPrice
